@@ -49,7 +49,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     // MARK: - Actions
     
     @objc func sliderMoved() {
-        sliderValueLabel.stringValue = String(sliderView.intValue) + " GB"
+        presenter.sliderMoved(with: sliderView.intValue)
     }
     
     @IBAction func startBenchmarkButtonTapped(_ sender: NSButton) {
@@ -58,39 +58,73 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     @IBAction func stopBenchmarkButtonTapped(_ sender: NSButton) {
     }
     
-    // MARK: - SSDView methods
-    func setupSlider(freeSpaceInBytes: Int64, sliderStartValue: Int) {
-        sliderView.target = self
-        sliderView.action = #selector(sliderMoved)
-        
-        sliderView.isContinuous = true
-                
-        sliderView.minValue = 1.0
-        sliderView.maxValue = Double(freeSpaceInBytes)
-        
-        sliderView.intValue = Int32(sliderStartValue)
-        sliderValueLabel.stringValue = String(sliderStartValue) + " GB"
+    // MARK: - SSDViewProtocol methods
+    func setupSlider(freeSpaceInBytes: Double, sliderStartValue: Int, sliderValueText: String) {
+        DispatchQueue.main.async {
+            self.sliderView.target = self
+            self.sliderView.action = #selector(self.sliderMoved)
+            
+            self.sliderView.isContinuous = true
+                    
+            self.sliderView.minValue = 1.0
+            self.sliderView.maxValue = freeSpaceInBytes
+            
+            self.sliderView.integerValue = sliderStartValue
+            self.sliderValueLabel.stringValue = sliderValueText
+        }
     }
     
     func setupDiskSpaceLabels(all: String, used: String, free: String) {
-        allSpaceLabel.stringValue = all
-        usedSpaceLabel.stringValue = used
-        freeSpaceLabel.stringValue = free
+        DispatchQueue.main.async {
+            self.allSpaceLabel.stringValue = all
+            self.usedSpaceLabel.stringValue = used
+            self.freeSpaceLabel.stringValue = free
+        }
     }
     
     func setupButtons() {
-        stopButton.isEnabled = false
+        DispatchQueue.main.async {
+            self.stopButton.isEnabled = false
+        }
     }
     
     func setupInputTextField() {
-        inputValueTextField.delegate = self
+        DispatchQueue.main.async {
+            self.inputValueTextField.delegate = self
+        }
+    }
+    
+    func updateSliderTextValue(with textValue: String) {
+        DispatchQueue.main.async {
+            self.sliderValueLabel.stringValue = textValue
+        }
+    }
+    
+    func updateSliderValue(with intValue: Int32) {
+        DispatchQueue.main.async {
+            self.sliderView.intValue = intValue
+        }
+    }
+    
+    func createAndActivateAlert() {
+        DispatchQueue.main.async {
+            let alert = NSAlert()
+            
+            alert.messageText = "Incorrect value"
+            alert.informativeText = "Input block size more than 0 and less than free space"
+            alert.addButton(withTitle: "OK")
+            alert.alertStyle = .warning
+            alert.icon = NSImage(named: NSImage.cautionName)
+            
+            alert.runModal()
+        }
     }
 }
 
 extension SSDViewController: NSTextFieldDelegate {
     func control(_ control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
-        self.sliderValueLabel.stringValue = fieldEditor.string + " GB"
-        self.sliderView.intValue = Int32(fieldEditor.string) ?? 0
+        
+        presenter.textFieldUpdated(with: fieldEditor.string, maxValue: self.sliderView.maxValue)
         
         return true
     }

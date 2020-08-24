@@ -12,6 +12,23 @@ class SSDInteractor: SSDInteractorProtocol {
     // MARK: - Properties
     weak var presenter: SSDPresenterProtocol!
     
+    var totalSpaceInByte: Int64 {
+        get {
+            return DiskStatus.totalDiskSpaceInBytes
+        }
+    }
+    
+    var usedSpaceInByte: Int64 {
+        get {
+            return DiskStatus.usedDiskSpaceInBytes
+        }
+    }
+    
+    var freeSpaceInByte: Int64 {
+        get {
+            return DiskStatus.freeDiskSpaceInBytes
+        }
+    }
     
     // MARK: - Initializers
     init(presenter: SSDPresenterProtocol) {

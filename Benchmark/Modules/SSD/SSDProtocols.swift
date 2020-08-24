@@ -10,15 +10,22 @@ import Foundation
 
 // MARK: - View protocol
 protocol SSDViewProtocol: class {
-    func setupSlider(freeSpaceInBytes: Int64, sliderStartValue: Int)
+    func setupSlider(freeSpaceInBytes: Double, sliderStartValue: Int, sliderValueText: String)
     func setupDiskSpaceLabels(all: String, used: String, free: String)
     func setupButtons()
     func setupInputTextField()
+    
+    func updateSliderTextValue(with textValue: String)
+    func updateSliderValue(with intValue: Int32)
+    func createAndActivateAlert()
 }
 
 // MARK: - Interactor protocol
 protocol SSDInteractorProtocol: class {
     
+    var totalSpaceInByte: Int64 { get }
+    var usedSpaceInByte: Int64 { get }
+    var freeSpaceInByte: Int64 { get }
 }
 
 // MARK: - Presenter protocol
@@ -26,6 +33,9 @@ protocol SSDPresenterProtocol: class {
     var router: SSDRouterProtocol! { set get }
     
     func configureView()
+    
+    func textFieldUpdated(with newValue: String, maxValue: Double)
+    func sliderMoved(with newValue: Int32)
 }
 
 // MARK: - Configurator protocol
