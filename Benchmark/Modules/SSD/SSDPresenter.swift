@@ -54,10 +54,12 @@ class SSDPresenter: SSDPresenterProtocol {
         
         view.updateSliderTextValue(with: newLabelValue)
         view.updateSliderValue(with: newSliderValue)
+        view.blockCount = newIntValue
     }
     
     func sliderMoved(with newValue: Int32) {
         view.updateSliderTextValue(with: "\(newValue) GB")
+        view.blockCount = newValue
     }
     
     // MARK: - Private methods

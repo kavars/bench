@@ -10,6 +10,8 @@ import Foundation
 
 // MARK: - View protocol
 protocol SSDViewProtocol: class {
+    var blockCount: Int32 { set get }
+    
     func setupSlider(freeSpaceInBytes: Double, sliderStartValue: Int, sliderValueText: String)
     func setupDiskSpaceLabels(all: String, used: String, free: String)
     func setupButtons()

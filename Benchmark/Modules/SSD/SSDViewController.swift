@@ -14,6 +14,9 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     var presenter: SSDPresenterProtocol!
     let configurator: SSDConfiguratorProtocol = SSDConfigurator()
     
+    var isStop: Bool = false
+    var blockCount: Int32 = 0
+    
     // MARK: - Life cycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,9 +56,34 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     }
     
     @IBAction func startBenchmarkButtonTapped(_ sender: NSButton) {
+        stopButton.isEnabled = true
+        isStop = false
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "y-MM-dd H:m:ss.SSSS"
+        
+        DispatchQueue.global().async {
+            let data = Data(count: 1024*1024*1024)
+            
+            for _ in 0..<self.blockCount {
+                if self.isStop {
+                    break
+                }
+                do {
+                    try data.write(to: FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("test/" + dateFormatter.string(from: Date()) + ".data"))
+                } catch let error as NSError {
+                    print(error.localizedDescription)
+                }
+            }
+            self.presenter.configureView()
+        }
+
+        
+        
     }
     
     @IBAction func stopBenchmarkButtonTapped(_ sender: NSButton) {
+        isStop = true
     }
     
     // MARK: - SSDViewProtocol methods
