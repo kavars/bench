@@ -112,6 +112,7 @@
 		7E87B5E824F2FE4000FF3D20 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				7ED42A6225753A030091805B /* Battery */,
 				7E87B5E924F2FE6500FF3D20 /* SSD */,
 			);
 			path = Modules;
@@ -167,6 +168,13 @@
 				7E87B5D024F2FBF400FF3D20 /* Main.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		7ED42A6225753A030091805B /* Battery */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Battery;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -437,7 +445,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = Kaviro.Benchmark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -458,7 +466,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = Kaviro.Benchmark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

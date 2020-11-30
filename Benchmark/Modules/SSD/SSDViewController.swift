@@ -23,6 +23,9 @@ class SSDViewController: NSViewController, SSDViewProtocol {
 
         configurator.configure(with: self)
         presenter.configureView()
+        
+//        ssdInfoBlock.layer?.cornerRadius = 10
+//        ssdInfoBlock.layer?.masksToBounds = true
     }
 
     override var representedObject: Any? {
@@ -33,12 +36,12 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var ssdInfoBlock: NSTextField!
     // Labels
     
     @IBOutlet weak var allSpaceLabel: NSTextField!
     @IBOutlet weak var usedSpaceLabel: NSTextField!
     @IBOutlet weak var freeSpaceLabel: NSTextField!
-    @IBOutlet weak var sliderValueLabel: NSTextField!
     @IBOutlet weak var writeSpeedLabel: NSTextField!
     
     // TextField & Slider
@@ -53,6 +56,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     
     @objc func sliderMoved() {
         presenter.sliderMoved(with: sliderView.intValue)
+//        inputValueTextField.stringValue = ""
+//        inputValueTextField.placeholderString = "\(sliderView.intValue) GB"
     }
     
     @IBAction func startBenchmarkButtonTapped(_ sender: NSButton) {
@@ -97,8 +102,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
             self.sliderView.minValue = 1.0
             self.sliderView.maxValue = freeSpaceInBytes
             
-            self.sliderView.integerValue = sliderStartValue
-            self.sliderValueLabel.stringValue = sliderValueText
+            self.sliderView.integerValue = 1
+            
         }
     }
     
@@ -124,7 +129,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     
     func updateSliderTextValue(with textValue: String) {
         DispatchQueue.main.async {
-            self.sliderValueLabel.stringValue = textValue
+            self.inputValueTextField.stringValue = ""
+            self.inputValueTextField.placeholderString = textValue
         }
     }
     
