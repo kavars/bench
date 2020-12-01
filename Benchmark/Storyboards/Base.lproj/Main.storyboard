@@ -701,10 +701,10 @@
             </objects>
             <point key="canvasLocation" x="23.5" y="250"/>
         </scene>
-        <!--View Controller-->
+        <!--Battery View Controller-->
         <scene sceneID="I8h-Va-gBs">
             <objects>
-                <viewController id="rl6-mj-hlb" sceneMemberID="viewController">
+                <viewController id="rl6-mj-hlb" customClass="BatteryViewController" customModule="Benchmark" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="nWG-as-xGw">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
