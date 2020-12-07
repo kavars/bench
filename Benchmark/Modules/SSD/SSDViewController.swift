@@ -65,19 +65,54 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         isStop = false
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "y-MM-dd H:m:ss.SSSS"
         
-        DispatchQueue.global().async {
-            let data = Data(count: 1024*1024*1024)
+        dateFormatter.dateFormat = "HH-mm-ss"
+        logFile = "ssd_test+\(dateFormatter.string(from: Date())).csv"
+
+        let text = "Block;Speed;Time\n"
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             
-            for _ in 0..<self.blockCount {
+            let fileURL = dir.appendingPathComponent(logFile)
+            
+            do {
+                try text.write(to: fileURL, atomically: false, encoding: .utf8)
+            }
+            catch {print(error.localizedDescription)}
+        }
+        
+        dateFormatter.dateFormat = "y-MM-dd H-m-ss.SSSS"
+        
+        
+        DispatchQueue.global(qos: .userInteractive).async {
+            let gb = 1024 * 1024 * 1024
+            let data = Data(count: gb)
+            
+            let dirPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("SSDBlocks")
+            
+            try? FileManager.default.createDirectory(at: dirPath, withIntermediateDirectories: true, attributes: nil) //
+                        
+            for i in 0..<self.blockCount {
+                let startBlock = Date()
                 if self.isStop {
                     break
                 }
                 do {
-                    try data.write(to: FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("test/" + dateFormatter.string(from: Date()) + ".data"))
+                    try data.write(to: FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("SSDBlocks/" + dateFormatter.string(from: Date()) + ".data"))
                 } catch let error as NSError {
                     print(error.localizedDescription)
+                }
+                let endBlockTime = Date()
+                let blockTime = endBlockTime.timeIntervalSince(startBlock)
+                
+                DispatchQueue.main.async {
+                    self.writeSpeedLabel.isHidden = false
+                    
+                    let result = Int(1024.0 - Double(gb) * blockTime / 1024.0 / 1024.0 + 1024.0)
+                    
+                    self.logSSD(index: Int(i) + 1, speed: result, time: blockTime)
+                    
+                    self.writeSpeedLabel.stringValue = "\(result) mb/s"
+
                 }
             }
             self.presenter.configureView()
@@ -85,6 +120,27 @@ class SSDViewController: NSViewController, SSDViewProtocol {
 
         
         
+    }
+    var logFile = ""
+    func logSSD(index: Int, speed: Int, time: Double) {
+        DispatchQueue.global(qos: .utility).async {
+            let text = "\(index);\(speed);\(time)\n"
+            
+            let stringData = text.data(using: .utf8)!
+
+            if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                
+                let fileURL = dir.appendingPathComponent(self.logFile)
+                
+                if FileManager.default.fileExists(atPath: fileURL.path) {
+                    if let fileHandle = try? FileHandle(forWritingTo: fileURL) {
+                        fileHandle.seekToEndOfFile()
+                        fileHandle.write(stringData)
+                        fileHandle.closeFile()
+                    }
+                }
+            }
+        }
     }
     
     @IBAction func stopBenchmarkButtonTapped(_ sender: NSButton) {
