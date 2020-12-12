@@ -24,6 +24,13 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         configurator.configure(with: self)
         presenter.configureView()
         
+        writeSpeedLabel.stringValue = ""
+        progressLabel.stringValue = ""
+        progressIndicator.doubleValue = 0.0
+        progressLabel.isHidden = true
+        progressIndicator.isHidden = true
+        writeSpeedLabel.isHidden = true
+        writeSpeedTitle.isHidden = true
 //        ssdInfoBlock.layer?.cornerRadius = 10
 //        ssdInfoBlock.layer?.masksToBounds = true
     }
@@ -36,6 +43,9 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var progressLabel: NSTextField!
+    @IBOutlet weak var progressIndicator: NSProgressIndicator!
+    
     @IBOutlet weak var ssdInfoBlock: NSTextField!
     // Labels
     
@@ -44,6 +54,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     @IBOutlet weak var freeSpaceLabel: NSTextField!
     @IBOutlet weak var writeSpeedLabel: NSTextField!
     
+    @IBOutlet weak var writeSpeedTitle: NSTextField!
     // TextField & Slider
     @IBOutlet weak var inputValueTextField: NSTextField!
     @IBOutlet weak var sliderView: NSSlider!
@@ -63,6 +74,16 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     @IBAction func startBenchmarkButtonTapped(_ sender: NSButton) {
         stopButton.isEnabled = true
         isStop = false
+        
+        writeSpeedLabel.stringValue = "0 mb/s"
+        progressIndicator.maxValue = Double(blockCount)
+        progressLabel.stringValue = "0/\(blockCount)"
+        progressIndicator.doubleValue = 0.0
+        progressLabel.isHidden = false
+        progressIndicator.isHidden = false
+        writeSpeedLabel.isHidden = false
+        writeSpeedTitle.isHidden = false
+
         
         let dateFormatter = DateFormatter()
         
@@ -105,7 +126,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
                 let blockTime = endBlockTime.timeIntervalSince(startBlock)
                 
                 DispatchQueue.main.async {
-                    self.writeSpeedLabel.isHidden = false
+                    self.progressLabel.stringValue = "\(i + 1)/\(self.blockCount)"
+                    self.progressIndicator.doubleValue = Double(i + 1)
                     
                     let result = Int(1024.0 - Double(gb) * blockTime / 1024.0 / 1024.0 + 1024.0)
                     
@@ -114,6 +136,14 @@ class SSDViewController: NSViewController, SSDViewProtocol {
                     self.writeSpeedLabel.stringValue = "\(result) mb/s"
 
                 }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.progressLabel.isHidden = true
+                self.progressIndicator.isHidden = true
+                self.progressLabel.stringValue = ""
+                self.writeSpeedLabel.isHidden = true
+                self.writeSpeedTitle.isHidden = true
+                self.progressIndicator.doubleValue = 0.0
             }
             self.presenter.configureView()
         }
@@ -145,6 +175,16 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     
     @IBAction func stopBenchmarkButtonTapped(_ sender: NSButton) {
         isStop = true
+        
+        DispatchQueue.main.async {
+            self.writeSpeedLabel.isHidden = true
+            self.progressLabel.isHidden = true
+            self.progressIndicator.isHidden = true
+            self.writeSpeedTitle.isHidden = true
+            self.writeSpeedLabel.stringValue = ""
+            self.progressLabel.stringValue = ""
+            self.progressIndicator.doubleValue = 0.0
+        }
     }
     
     // MARK: - SSDViewProtocol methods

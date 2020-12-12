@@ -875,18 +875,34 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <progressIndicator fixedFrame="YES" maxValue="100" doubleValue="50" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="GZO-TI-3d3">
+                                <rect key="frame" x="216" y="80" width="174" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </progressIndicator>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Fp-OC-L89">
+                                <rect key="frame" x="216" y="107" width="176" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="soM-A4-Xkl">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="allSpaceLabel" destination="TlC-Aq-BKl" id="9g6-ur-6wv"/>
                         <outlet property="freeSpaceLabel" destination="Uop-tm-yqe" id="Xc8-pf-JNk"/>
                         <outlet property="inputValueTextField" destination="BoF-1e-EPo" id="YMO-wR-OdT"/>
+                        <outlet property="progressIndicator" destination="GZO-TI-3d3" id="rzk-6A-Egd"/>
+                        <outlet property="progressLabel" destination="0Fp-OC-L89" id="vt4-s5-noT"/>
                         <outlet property="sliderView" destination="34P-gf-PFK" id="lSN-lx-9gq"/>
                         <outlet property="ssdInfoBlock" destination="v69-cl-fsJ" id="v4O-6s-Ydh"/>
                         <outlet property="startButton" destination="Pnf-tA-7sX" id="PZZ-Zv-ruf"/>
                         <outlet property="stopButton" destination="zpR-ee-ovQ" id="rQc-pV-VHB"/>
                         <outlet property="usedSpaceLabel" destination="3RN-2x-OmP" id="d5m-LB-YsP"/>
                         <outlet property="writeSpeedLabel" destination="ilf-dg-nQs" id="Zpv-4O-ZR3"/>
+                        <outlet property="writeSpeedTitle" destination="6mp-td-2lX" id="HTZ-8b-ZXd"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
