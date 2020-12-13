@@ -168,7 +168,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
 
             self.presenter.configureView()
         }
-                
+//        progressIndicator.startAnimation(nil)
         opQueue.addOperation(blockWriteOperation)
     }
     
@@ -189,6 +189,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
 
         progressLabel.stringValue = ""
         progressIndicator.doubleValue = 0.0
+        
+//        progressIndicator.stopAnimation(nil)
     }
     
     func endWrite() {
@@ -196,6 +198,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         self.stopButton.isEnabled = false
         self.clearButton.isEnabled = true
         self.exportButton.isEnabled = true
+//        progressIndicator.stopAnimation(nil)
+
     }
     
     // MARK: - SSDViewProtocol methods
