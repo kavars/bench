@@ -22,7 +22,7 @@ class BlockWriteOperation: Operation {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "y-MM-dd H-m-ss.SSSS"
         
-        let gb = 1024 * 1024 * 1024
+        let gb = 1000 * 1000 * 1000
         let data = Data(count: gb)
         
         let dirPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("SSDBlocks")
@@ -45,7 +45,7 @@ class BlockWriteOperation: Operation {
             let endBlockTime = Date()
             let blockTime = endBlockTime.timeIntervalSince(startBlock)
             
-            let result = Int(1024.0 - Double(gb) * blockTime / 1024.0 / 1024.0 + 1024.0)
+            let result = Int(1000.0 - Double(gb) * blockTime / 1000.0 / 1000.0 + 1000.0)
             
             DispatchQueue.main.async {
                 self.uiUpdater(Int(i), result, blockTime)

@@ -50,16 +50,16 @@ class SSDPresenter: SSDPresenterProtocol {
         
 //        view.updateSliderTextValue(with: newLabelValue)
         view.updateSliderValue(with: newSliderValue)
-        view.blockCount = newIntValue
+        interactor.blockCount = newIntValue
     }
     
     func sliderMoved(with newValue: Int32) {
         view.updateSliderTextValue(with: "\(newValue) GB")
-        view.blockCount = newValue
+        interactor.blockCount = newValue
     }
     
     func startButtonTapped() {
-        view.changeUIForStart(blockCount: view.blockCount) // change
+        view.changeUIForStart(blockCount: interactor.blockCount)
         
         interactor.createLogFileForSSD { (error) in
             self.view.createAndShowErrorAlert(with: error)
@@ -71,7 +71,7 @@ class SSDPresenter: SSDPresenterProtocol {
             self.interactor.stopOperation()
         }
 
-        interactor.startWrite(with: view.blockCount)
+        interactor.startWrite()
     }
     
     func stopButtonTapped() {
@@ -92,7 +92,7 @@ class SSDPresenter: SSDPresenterProtocol {
     }
     
     func updateUI() {
-        let freeSpace = Double(interactor.freeSpaceInByte / 1000000000) - 10.0
+        let freeSpace = Double(interactor.freeSpaceInByte / 1000 * 1000 * 1000) - 10.0
         view.updateSlider(freeSpaceInBytes: freeSpace)
         
         view.setupDiskSpaceLabels(

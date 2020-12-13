@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - View protocol
 protocol SSDViewProtocol: class {
-    var blockCount: Int32 { set get }
+//    var blockCount: Int32 { set get }
     
     func setupSlider(freeSpaceInBytes: Double)
     func updateSlider(freeSpaceInBytes: Double)
@@ -32,6 +32,7 @@ protocol SSDViewProtocol: class {
 
 // MARK: - Interactor protocol
 protocol SSDInteractorProtocol: class {
+    var blockCount: Int32 { set get }
     
     var totalSpaceInByte: Int64 { get }
     var usedSpaceInByte: Int64 { get }
@@ -39,7 +40,7 @@ protocol SSDInteractorProtocol: class {
     
     func createLogFileForSSD(failure: @escaping (String) -> Void)
     func stopOperation()
-    func startWrite(with blockCount: Int32)
+    func startWrite()
     
     func moveLogFile(to url: URL)
 }

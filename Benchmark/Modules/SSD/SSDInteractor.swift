@@ -12,6 +12,8 @@ class SSDInteractor: SSDInteractorProtocol {
     // MARK: - Properties
     weak var presenter: SSDPresenterProtocol!
     let opQueue = OperationQueue()
+    
+    var blockCount: Int32 = 1
 
     lazy var logger: SSDLogService = LoggerService()
     
@@ -50,12 +52,12 @@ class SSDInteractor: SSDInteractorProtocol {
         opQueue.cancelAllOperations()
     }
     
-    func startWrite(with blockCount: Int32) {
+    func startWrite() {
         let blockWriteOperation = BlockWriteOperation(blockCount: blockCount) { (index, result, blockTime) in
             
             self.logger.writeSSDLog(index: Int(index) + 1, speed: result, time: blockTime)
             
-            self.presenter.updateWhileWrite(at: index, with: result, blockCount)
+            self.presenter.updateWhileWrite(at: index, with: result, self.blockCount)
         }
         
         blockWriteOperation.completionBlock = {

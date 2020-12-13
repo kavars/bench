@@ -26,7 +26,7 @@ class BenchmarkTests: XCTestCase {
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
-        let data = Data(count: 4*1024*1024*1024)
+        let data = Data(count: 4*1000*1000*1000)
         
 
         self.measure {

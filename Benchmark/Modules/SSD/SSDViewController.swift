@@ -13,8 +13,6 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     // MARK: - Properties
     var presenter: SSDPresenterProtocol!
     let configurator: SSDConfiguratorProtocol = SSDConfigurator()
-
-    var blockCount: Int32 = 1 // move to interactor
     
     // MARK: - Life cycle methods
     override func viewDidLoad() {
