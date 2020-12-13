@@ -14,7 +14,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     var presenter: SSDPresenterProtocol!
     let configurator: SSDConfiguratorProtocol = SSDConfigurator()
 
-    var blockCount: Int32 = 0 // move to interactor
+    var blockCount: Int32 = 1 // move to interactor
     
     // MARK: - Life cycle methods
     override func viewDidLoad() {
@@ -71,33 +71,25 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     }
     
     @IBAction func exportLog(_ sender: Any) {
-//        let panel = NSSavePanel()
-//
-//        panel.nameFieldStringValue = logger.logFileName
-//
-//        let result = panel.runModal()
-//
-//        switch result {
-//        case .OK:
-//            guard let saveURL = panel.url else {
-//                return
-//            }
-//
-//            if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-//
-//                let fileURL = dir.appendingPathComponent(logger.logFileName)
-//
-//                do {
-//                    try FileManager.default.moveItem(at: fileURL, to: saveURL)
-//                } catch {
-//                    createAndShowErrorAlert(with: "\(error.localizedDescription)\nYou can find log at ~/Library/Containers/Benchmark/data/Documents/\(logger.logFileName)")
-//                }
-//            }
-//        default:
-//            print("Panel shouldn't be anything other than OK or Cancel")
-//        }
-//
-//        exportButton.isEnabled = false
+        let panel = NSSavePanel()
+
+        panel.nameFieldStringValue = "ssdLog.csv"
+
+        let result = panel.runModal()
+
+        switch result {
+        case .OK:
+            
+            guard let saveURL = panel.url else {
+                return
+            }
+            
+            presenter.moveLogFile(to: saveURL)
+        default:
+            print("Panel shouldn't be anything other than OK")
+        }
+
+        exportButton.isEnabled = false // to presenter
     }
     
     @IBAction func startBenchmarkButtonTapped(_ sender: NSButton) {
@@ -109,7 +101,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     }
     
     // MARK: - SSDViewProtocol methods
-    func setupSlider(freeSpaceInBytes: Double) { // , sliderStartValue: Int, sliderValueText: String) {
+    func setupSlider(freeSpaceInBytes: Double) {
         DispatchQueue.main.async {
             self.sliderView.target = self
             self.sliderView.action = #selector(self.sliderMoved)
@@ -125,9 +117,10 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     }
     
     func updateSlider(freeSpaceInBytes: Double) {
-        self.sliderView.maxValue = freeSpaceInBytes
-        
-        self.sliderView.integerValue = 1
+        DispatchQueue.main.async {
+            self.sliderView.maxValue = freeSpaceInBytes
+            self.sliderView.integerValue = 1
+        }
     }
     
     func setupDiskSpaceLabels(all: String, used: String, free: String) {

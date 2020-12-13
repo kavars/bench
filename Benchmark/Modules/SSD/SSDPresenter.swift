@@ -102,6 +102,14 @@ class SSDPresenter: SSDPresenterProtocol {
         )
     }
     
+    func moveLogFile(to url: URL) {
+        interactor.moveLogFile(to: url)
+    }
+
+    func showAlert(with message: String) {
+        view.createAndShowErrorAlert(with: message)
+    }
+    
     // MARK: - Private methods
     
     private func spaceFormatter(bytes: Int64) -> String {

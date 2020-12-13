@@ -40,6 +40,8 @@ protocol SSDInteractorProtocol: class {
     func createLogFileForSSD(failure: @escaping (String) -> Void)
     func stopOperation()
     func startWrite(with blockCount: Int32)
+    
+    func moveLogFile(to url: URL)
 }
 
 // MARK: - Presenter protocol
@@ -59,6 +61,9 @@ protocol SSDPresenterProtocol: class {
     func updateWhileWrite(at index: Int, with result: Int, _ blockCount: Int32)
     
     func updateUI()
+    
+    func showAlert(with message: String)
+    func moveLogFile(to url: URL)
 }
 
 // MARK: - Configurator protocol

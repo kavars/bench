@@ -71,4 +71,17 @@ class SSDInteractor: SSDInteractorProtocol {
         
         opQueue.addOperation(blockWriteOperation)
     }
+    
+    func moveLogFile(to url: URL) {
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+
+            let fileURL = dir.appendingPathComponent(logger.logFileName)
+
+            do {
+                _ = try FileManager.default.replaceItemAt(url, withItemAt: fileURL)
+            } catch {
+                presenter.showAlert(with: error.localizedDescription + "\n\nYou can find log at ~/Library/Containers/Benchmark/data/Documents/")
+            }
+        }
+    }
 }
