@@ -11,18 +11,27 @@ import Cocoa
 class BatteryViewController: NSViewController {
     
     var logger: BatteryLogService = LoggerService()
+    
+    var timer: Timer?
         
+    @IBOutlet weak var startButton: NSButton!
+    @IBOutlet weak var stopButton: NSButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        stopButton.isEnabled = false
     }
     
     @objc func startCollectionBatteryStats() {
+        startButton.isEnabled = false
+        stopButton.isEnabled = true
+        
         logger.createLogFileForBattery { (error) in
             // error alert
         }
 
-        Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(getBatt), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(getBatt), userInfo: nil, repeats: true)
     }
     
     @objc func getBatt() {
@@ -41,4 +50,15 @@ class BatteryViewController: NSViewController {
 
     }
 
+    @IBAction func startCollectionBatteryStats(_ sender: NSButton) {
+        startCollectionBatteryStats()
+    }
+    
+    @IBAction func stopCollectionBatteryStats(_ sender: NSButton) {
+        stopButton.isEnabled = false
+        startButton.isEnabled = true
+        
+        timer?.invalidate()
+        timer = nil
+    }
 }
