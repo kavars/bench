@@ -63,6 +63,46 @@ class LoggerService {
         dateFormatter.locale = .init(identifier: "en_US")
         return dateFormatter
     }()
+    
+    
+    /// Create log file
+    /// - Parameters:
+    ///   - structure: CSV log structure
+    ///   - failure: Failure handler
+    private func createLogFile(with structure: String, failure: @escaping (String) -> Void) {
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            
+            let fileURL = dir.appendingPathComponent(self.logFileName)
+            
+            do {
+                try structure.write(to: fileURL, atomically: false, encoding: .utf8)
+            } catch {
+                failure("\(error.localizedDescription)\n\nCan't create log file")
+            }
+        }
+    }
+    
+    
+    /// Write log
+    /// - Parameter data: Log data in CSV style
+    private func writeLog(with data: String) {
+        guard let stringData = data.data(using: .utf8) else {
+            return
+        }
+        
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            
+            let fileURL = dir.appendingPathComponent(self.logFileName)
+            
+            if FileManager.default.fileExists(atPath: fileURL.path) {
+                if let fileHandle = try? FileHandle(forWritingTo: fileURL) {
+                    fileHandle.seekToEndOfFile()
+                    fileHandle.write(stringData)
+                    fileHandle.closeFile()
+                }
+            }
+        }
+    }
 }
 
 // MARK: - SSDLogService
@@ -77,18 +117,9 @@ extension LoggerService: SSDLogService {
             
             self.logFileName = "ssd_test+\(self.dateFormatter.string(from: Date())).csv"
             
-            let text = "Block;Speed;Time\n"
+            let structure = "Block;Speed;Time\n"
             
-            if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                
-                let fileURL = dir.appendingPathComponent(self.logFileName)
-                
-                do {
-                    try text.write(to: fileURL, atomically: false, encoding: .utf8)
-                } catch {
-                    failure("\(error.localizedDescription)\nCan't create log file")
-                }
-            }
+            self.createLogFile(with: structure, failure: failure)
         }
     }
     
@@ -99,22 +130,9 @@ extension LoggerService: SSDLogService {
     ///   - time: Write time
     func writeSSDLog(index: Int, speed: Int, time: Double) {
         DispatchQueue.global(qos: .utility).async {
-            let text = "\(index);\(speed);\(time)\n"
+            let logData = "\(index);\(speed);\(time)\n"
             
-            let stringData = text.data(using: .utf8)!
-            
-            if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                
-                let fileURL = dir.appendingPathComponent(self.logFileName)
-                
-                if FileManager.default.fileExists(atPath: fileURL.path) {
-                    if let fileHandle = try? FileHandle(forWritingTo: fileURL) {
-                        fileHandle.seekToEndOfFile()
-                        fileHandle.write(stringData)
-                        fileHandle.closeFile()
-                    }
-                }
-            }
+            self.writeLog(with: logData)
         }
     }
 }
@@ -125,19 +143,14 @@ extension LoggerService: BatteryLogService {
     /// Create log file for battery stats
     /// - Parameter failure: Error handler
     func createLogFileForBattery(failure: @escaping (String) -> Void) {
-        dateFormatter.dateFormat = "HH-mm-ss"
+        DispatchQueue.global(qos: .utility).async {
+            self.dateFormatter.dateFormat = "HH-mm-ss"
 
-        logFileName = "battery_test+\(dateFormatter.string(from: Date())).csv"
-        
-        let text = "Time;Temperature;Current Capacity;Maximum capacity;Design capacity\n"
-        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            self.logFileName = "battery_test+\(self.dateFormatter.string(from: Date())).csv"
             
-            let fileURL = dir.appendingPathComponent(logFileName)
+            let structure = "Time;Temperature;Current Capacity;Maximum capacity;Design capacity\n"
             
-            do {
-                try text.write(to: fileURL, atomically: false, encoding: .utf8)
-            }
-            catch {print(error.localizedDescription)}
+            self.createLogFile(with: structure, failure: failure)
         }
     }
     
@@ -149,23 +162,12 @@ extension LoggerService: BatteryLogService {
     ///   - designCap: Battery's design capacity
     func writeBatteryLog(temp: NSNumber, currentCap: NSNumber, maxCap: NSNumber, designCap: NSNumber) {
         
-        self.dateFormatter.dateFormat = "HH:mm:ss"
-        
-        let text = self.dateFormatter.string(from: Date()) + ";\(temp);\(currentCap);\(maxCap);\(designCap)\n"
-        
-        let stringData = text.data(using: .utf8)!
-
-        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+        DispatchQueue.global(qos: .utility).async {
+            self.dateFormatter.dateFormat = "HH:mm:ss"
             
-            let fileURL = dir.appendingPathComponent(self.logFileName)
+            let logData = self.dateFormatter.string(from: Date()) + ";\(temp);\(currentCap);\(maxCap);\(designCap)\n"
             
-            if FileManager.default.fileExists(atPath: fileURL.path) {
-                if let fileHandle = try? FileHandle(forWritingTo: fileURL) {
-                    fileHandle.seekToEndOfFile()
-                    fileHandle.write(stringData)
-                    fileHandle.closeFile()
-                }
-            }
+            self.writeLog(with: logData)
         }
     }
 }
