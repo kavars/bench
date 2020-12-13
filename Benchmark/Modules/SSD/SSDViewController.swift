@@ -29,6 +29,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         
         exportButton.isEnabled = false
         clearButton.isEnabled = false
+        
+        opQueue.qualityOfService = .userInteractive
     }
 
     override var representedObject: Any? {
@@ -80,6 +82,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
             } catch {
                 self.createAndShowErrorAlert(with: "\(error.localizedDescription)\nYou can delete all blocks at ~/Library/Containers/Benchmark/data/SSDBlocks/")
             }
+            
+            self.presenter.configureView()
         }
         
         clearButton.isEnabled = false
