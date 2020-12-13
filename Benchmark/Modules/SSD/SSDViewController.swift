@@ -13,10 +13,6 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     // MARK: - Properties
     var presenter: SSDPresenterProtocol!
     let configurator: SSDConfiguratorProtocol = SSDConfigurator()
-    let opQueue = OperationQueue()
-    let logger: SSDLogService = LoggerService()
-
-    var blockCount: Int32 = 0
     
     // MARK: - Life cycle methods
     override func viewDidLoad() {
@@ -24,43 +20,26 @@ class SSDViewController: NSViewController, SSDViewProtocol {
 
         configurator.configure(with: self)
         presenter.configureView()
-        
-        resetUI()
-        
-        exportButton.isEnabled = false
-        clearButton.isEnabled = false
-        
-        opQueue.qualityOfService = .userInteractive
-    }
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
     }
     
     // MARK: - Outlets
     
-    @IBOutlet weak var progressLabel: NSTextField!
-    @IBOutlet weak var progressIndicator: NSProgressIndicator!
-    
-    @IBOutlet weak var ssdInfoBlock: NSTextField!
     // Labels
-    
     @IBOutlet weak var allSpaceLabel: NSTextField!
     @IBOutlet weak var usedSpaceLabel: NSTextField!
     @IBOutlet weak var freeSpaceLabel: NSTextField!
     @IBOutlet weak var writeSpeedLabel: NSTextField!
-    
     @IBOutlet weak var writeSpeedTitle: NSTextField!
-    // TextField & Slider
+    @IBOutlet weak var progressLabel: NSTextField!
+
+    // Others
     @IBOutlet weak var inputValueTextField: NSTextField!
     @IBOutlet weak var sliderView: NSSlider!
+    @IBOutlet weak var progressIndicator: NSProgressIndicator!
 
     // Buttons
     @IBOutlet weak var startButton: NSButton!
     @IBOutlet weak var stopButton: NSButton!
-    
     @IBOutlet weak var exportButton: NSButton!
     @IBOutlet weak var clearButton: NSButton!
     
@@ -80,10 +59,10 @@ class SSDViewController: NSViewController, SSDViewProtocol {
                     try FileManager.default.removeItem(at: blockURL)
                 }
             } catch {
-                self.createAndShowErrorAlert(with: "\(error.localizedDescription)\nYou can delete all blocks at ~/Library/Containers/Benchmark/data/SSDBlocks/")
+                self.createAndShowErrorAlert(with: "\(error.localizedDescription)\n\nYou can delete all blocks at ~/Library/Containers/Benchmark/data/SSDBlocks/")
             }
             
-            self.presenter.configureView()
+            self.presenter.updateUI()
         }
         
         clearButton.isEnabled = false
@@ -91,123 +70,36 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     
     @IBAction func exportLog(_ sender: Any) {
         let panel = NSSavePanel()
-        
-        panel.nameFieldStringValue = logger.logFileName
-        
+
+        panel.nameFieldStringValue = "ssdLog.csv"
+
         let result = panel.runModal()
-        
+
         switch result {
         case .OK:
+            
             guard let saveURL = panel.url else {
                 return
             }
             
-            if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                
-                let fileURL = dir.appendingPathComponent(logger.logFileName)
-                
-                do {
-                    try FileManager.default.moveItem(at: fileURL, to: saveURL)
-                } catch {
-                    createAndShowErrorAlert(with: "\(error.localizedDescription)\nYou can find log at ~/Library/Containers/Benchmark/data/Documents/\(logger.logFileName)")
-                }
-            }
+            presenter.moveLogFile(to: saveURL)
         default:
-            print("Panel shouldn't be anything other than OK or Cancel")
+            print("Panel shouldn't be anything other than OK")
         }
-        
-        exportButton.isEnabled = false
+
+        exportButton.isEnabled = false // to presenter
     }
     
     @IBAction func startBenchmarkButtonTapped(_ sender: NSButton) {
-        
-        stopButton.isEnabled = true
-        
-        exportButton.isEnabled = false
-        startButton.isEnabled = false
-        writeSpeedLabel.stringValue = "0 mb/s"
-        progressIndicator.maxValue = Double(blockCount)
-        progressLabel.stringValue = "0/\(blockCount)"
-        progressIndicator.doubleValue = 0.0
-        progressLabel.isHidden = false
-        progressIndicator.isHidden = false
-        writeSpeedLabel.isHidden = false
-        writeSpeedTitle.isHidden = false
-
-        logger.createLogFileForSSD { (error) in
-            let alert = NSAlert()
-            alert.messageText = "Error"
-            alert.informativeText = error
-            alert.alertStyle = .warning
-            alert.addButton(withTitle: "OK")
-            alert.icon = NSImage(named: NSImage.cautionName)
-            alert.runModal()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.resetUI()
-                self.endWrite()
-                
-                // cancel operation
-            }
-            self.opQueue.cancelAllOperations()
-//            return
-        }
-        
-        let blockWriteOperation = BlockWriteOperation(blockCount: self.blockCount) { (index, result, blockTime) in
-            
-            self.logger.writeSSDLog(index: Int(index) + 1, speed: result, time: blockTime)
-            
-            self.writeSpeedLabel.stringValue = "\(result) mb/s"
-            self.progressLabel.stringValue = "\(index + 1)/\(self.blockCount)"
-            self.progressIndicator.doubleValue = Double(index + 1)
-        }
-        
-        blockWriteOperation.completionBlock = {
-            if !blockWriteOperation.isCancelled {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.resetUI()
-                    self.endWrite()
-                }
-            }
-
-            self.presenter.configureView()
-        }
-//        progressIndicator.startAnimation(nil)
-        opQueue.addOperation(blockWriteOperation)
+        presenter.startButtonTapped()
     }
     
     @IBAction func stopBenchmarkButtonTapped(_ sender: NSButton) {
-        opQueue.cancelAllOperations()
-        
-        DispatchQueue.main.async {
-            self.resetUI()
-            self.endWrite()
-        }
-    }
-    
-    func resetUI() {
-        progressLabel.isHidden = true
-        progressIndicator.isHidden = true
-        writeSpeedLabel.isHidden = true
-        writeSpeedTitle.isHidden = true
-
-        progressLabel.stringValue = ""
-        progressIndicator.doubleValue = 0.0
-        
-//        progressIndicator.stopAnimation(nil)
-    }
-    
-    func endWrite() {
-        self.startButton.isEnabled = true
-        self.stopButton.isEnabled = false
-        self.clearButton.isEnabled = true
-        self.exportButton.isEnabled = true
-//        progressIndicator.stopAnimation(nil)
-
+        presenter.stopButtonTapped()
     }
     
     // MARK: - SSDViewProtocol methods
-    func setupSlider(freeSpaceInBytes: Double, sliderStartValue: Int, sliderValueText: String) {
+    func setupSlider(freeSpaceInBytes: Double) {
         DispatchQueue.main.async {
             self.sliderView.target = self
             self.sliderView.action = #selector(self.sliderMoved)
@@ -222,6 +114,13 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         }
     }
     
+    func updateSlider(freeSpaceInBytes: Double) {
+        DispatchQueue.main.async {
+            self.sliderView.maxValue = freeSpaceInBytes
+            self.sliderView.integerValue = 1
+        }
+    }
+    
     func setupDiskSpaceLabels(all: String, used: String, free: String) {
         DispatchQueue.main.async {
             self.allSpaceLabel.stringValue = all
@@ -233,6 +132,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     func setupButtons() {
         DispatchQueue.main.async {
             self.stopButton.isEnabled = false
+            self.exportButton.isEnabled = false
+            self.clearButton.isEnabled = false
         }
     }
     
@@ -266,6 +167,58 @@ class SSDViewController: NSViewController, SSDViewProtocol {
             alert.runModal()
         }
     }
+    
+    func resetUI() {
+        DispatchQueue.main.async {
+            self.progressLabel.isHidden = true
+            self.progressIndicator.isHidden = true
+            self.writeSpeedLabel.isHidden = true
+            self.writeSpeedTitle.isHidden = true
+
+            self.progressLabel.stringValue = ""
+            self.progressIndicator.doubleValue = 0.0
+        
+        }
+    }
+    
+    func endWrite() {
+        DispatchQueue.main.async {
+            self.startButton.isEnabled = true
+            self.stopButton.isEnabled = false
+            self.clearButton.isEnabled = true
+            self.exportButton.isEnabled = true
+        }
+    }
+    
+    func changeUIForStart(blockCount: Int32) {
+        DispatchQueue.main.async {
+            self.stopButton.isEnabled = true
+            
+            self.exportButton.isEnabled = false
+            self.startButton.isEnabled = false
+            self.writeSpeedLabel.stringValue = "0 mb/s"
+            self.progressIndicator.maxValue = Double(blockCount)
+            self.progressLabel.stringValue = "0/\(blockCount)"
+            self.progressIndicator.doubleValue = 0.0
+            self.progressLabel.isHidden = false
+            self.progressIndicator.isHidden = false
+            self.writeSpeedLabel.isHidden = false
+            self.writeSpeedTitle.isHidden = false
+        }
+    }
+    
+    func updateWriteSpeed(_ speed: String) {
+        DispatchQueue.main.async {
+            self.writeSpeedLabel.stringValue = speed
+        }
+    }
+    
+    func updateProgress(_ label: String, _ indicator: Double) {
+        DispatchQueue.main.async {
+            self.progressLabel.stringValue = label
+            self.progressIndicator.doubleValue = indicator
+        }
+    }
 }
 
 extension SSDViewController: NSTextFieldDelegate {
@@ -274,5 +227,9 @@ extension SSDViewController: NSTextFieldDelegate {
         presenter.textFieldUpdated(with: fieldEditor.string, maxValue: self.sliderView.maxValue)
         
         return true
+    }
+    
+    func controlTextDidChange(_ obj: Notification) {
+        presenter.textFieldUpdated(with: self.inputValueTextField.stringValue, maxValue: self.sliderView.maxValue)
     }
 }

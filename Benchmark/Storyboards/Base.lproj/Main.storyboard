@@ -928,7 +928,6 @@
                         <outlet property="progressIndicator" destination="GZO-TI-3d3" id="rzk-6A-Egd"/>
                         <outlet property="progressLabel" destination="0Fp-OC-L89" id="vt4-s5-noT"/>
                         <outlet property="sliderView" destination="34P-gf-PFK" id="lSN-lx-9gq"/>
-                        <outlet property="ssdInfoBlock" destination="v69-cl-fsJ" id="v4O-6s-Ydh"/>
                         <outlet property="startButton" destination="Pnf-tA-7sX" id="PZZ-Zv-ruf"/>
                         <outlet property="stopButton" destination="zpR-ee-ovQ" id="rQc-pV-VHB"/>
                         <outlet property="usedSpaceLabel" destination="3RN-2x-OmP" id="d5m-LB-YsP"/>
