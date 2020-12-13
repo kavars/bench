@@ -9,33 +9,56 @@
 import Foundation
 
 // MARK: - Protocols
+
+/// Base logger service protocol
 protocol LogService: class {
+    
     /// Log file name
     var logFileName: String { get }
 }
 
+
+/// Logger service protocol for SSD module
 protocol SSDLogService: LogService {
+    
     /// Create log file for write session
+    /// - Parameter failure: Error handler
     func createLogFileForSSD(failure: @escaping (String) -> Void)
     
     /// Write log to write session's log file
+    /// - Parameters:
+    ///   - index: Row index in log file
+    ///   - speed: Write speed
+    ///   - time: Write time
     func writeSSDLog(index: Int, speed: Int, time: Double)
 }
 
+
+/// Logger service protocol for Battery module
 protocol BatteryLogService: LogService {
-    /// Create log file for battery
-    func createLogFileForBattery(failure: @escaping (String) -> Void)
     
+    /// Create log file for battery stats
+    /// - Parameter failure: Error handler
+    func createLogFileForBattery(failure: @escaping (String) -> Void)
+        
     /// Write log to battery's log file
+    /// - Parameters:
+    ///   - temp: Battery's temperature
+    ///   - currentCap: Battery's current capacity
+    ///   - maxCap: Battery's maximum capacity
+    ///   - designCap: Battery's design capacity
     func writeBatteryLog(temp: NSNumber, currentCap: NSNumber, maxCap: NSNumber, designCap: NSNumber)
 }
 
 // MARK: - Logger Service
+
+/// Logger Service
 class LoggerService {
+    
     /// Log file name
     var logFileName = ""
     
-    lazy var dateFormatter: DateFormatter = {
+    private lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = .init(identifier: "en_US")
         return dateFormatter
@@ -46,11 +69,10 @@ class LoggerService {
 extension LoggerService: SSDLogService {
     
     /// Create log file for write session
+    /// - Parameter failure: Error handler
     func createLogFileForSSD(failure: @escaping (String) -> Void) {
         DispatchQueue.global(qos: .utility).async {
-            
-//            let dateFormatter = DateFormatter()
-            
+                        
             self.dateFormatter.dateFormat = "HH-mm-ss"
             
             self.logFileName = "ssd_test+\(self.dateFormatter.string(from: Date())).csv"
@@ -71,6 +93,10 @@ extension LoggerService: SSDLogService {
     }
     
     /// Write log to write session's log file
+    /// - Parameters:
+    ///   - index: Row index in log file
+    ///   - speed: Write speed
+    ///   - time: Write time
     func writeSSDLog(index: Int, speed: Int, time: Double) {
         DispatchQueue.global(qos: .utility).async {
             let text = "\(index);\(speed);\(time)\n"
@@ -93,7 +119,11 @@ extension LoggerService: SSDLogService {
     }
 }
 
+// MARK: - BatteryLogService
 extension LoggerService: BatteryLogService {
+    
+    /// Create log file for battery stats
+    /// - Parameter failure: Error handler
     func createLogFileForBattery(failure: @escaping (String) -> Void) {
         dateFormatter.dateFormat = "HH-mm-ss"
 
@@ -111,6 +141,12 @@ extension LoggerService: BatteryLogService {
         }
     }
     
+    /// Write log to battery's log file
+    /// - Parameters:
+    ///   - temp: Battery's temperature
+    ///   - currentCap: Battery's current capacity
+    ///   - maxCap: Battery's maximum capacity
+    ///   - designCap: Battery's design capacity
     func writeBatteryLog(temp: NSNumber, currentCap: NSNumber, maxCap: NSNumber, designCap: NSNumber) {
         
         self.dateFormatter.dateFormat = "HH:mm:ss"
