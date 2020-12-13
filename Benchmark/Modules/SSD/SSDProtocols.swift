@@ -19,7 +19,7 @@ protocol SSDViewProtocol: class {
     
     func updateSliderTextValue(with textValue: String)
     func updateSliderValue(with intValue: Int32)
-    func createAndActivateAlert()
+    func createAndShowErrorAlert(with description: String)
 }
 
 // MARK: - Interactor protocol

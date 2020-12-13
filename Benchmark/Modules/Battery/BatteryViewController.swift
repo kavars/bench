@@ -10,31 +10,19 @@ import Cocoa
 
 class BatteryViewController: NSViewController {
     
-    var file = ""
-    
-    lazy var dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = .init(identifier: "en_US")
-        return dateFormatter
-    }()
+    var logger: BatteryLogService = LoggerService()
         
     override func viewDidLoad() {
-        dateFormatter.dateFormat = "HH-mm-ss"
-        file = "battery_test+\(dateFormatter.string(from: Date())).csv"
-        dateFormatter.dateFormat = "HH:mm:ss"
+        super.viewDidLoad()
+        
+    }
+    
+    @objc func startCollectionBatteryStats() {
+        logger.createLogFileForBattery { (error) in
+            // error alert
+        }
 
         Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(getBatt), userInfo: nil, repeats: true)
-
-        let text = "Time;Temperature;Current Capacity;Maximum capacity;Design capacity\n"
-        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-            
-            let fileURL = dir.appendingPathComponent(file)
-            
-            do {
-                try text.write(to: fileURL, atomically: false, encoding: .utf8)
-            }
-            catch {print(error.localizedDescription)}
-        }
     }
     
     @objc func getBatt() {
@@ -48,22 +36,7 @@ class BatteryViewController: NSViewController {
                 return
             }
             
-            let text = self.dateFormatter.string(from: Date()) + ";\(temp);\(currentCap);\(maxCap);\(designCap)\n"
-            
-            let stringData = text.data(using: .utf8)!
-
-            if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                
-                let fileURL = dir.appendingPathComponent(self.file)
-                
-                if FileManager.default.fileExists(atPath: fileURL.path) {
-                    if let fileHandle = try? FileHandle(forWritingTo: fileURL) {
-                        fileHandle.seekToEndOfFile()
-                        fileHandle.write(stringData)
-                        fileHandle.closeFile()
-                    }
-                }
-            }
+            self.logger.writeBatteryLog(temp: temp, currentCap: currentCap, maxCap: maxCap, designCap: designCap)
         }
 
     }

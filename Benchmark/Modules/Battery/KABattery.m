@@ -48,13 +48,13 @@
     
     // Design Capacity
     NSInteger battDesCap = [[batteryDict objectForKey:@"DesignCapacity"] integerValue];
-    NSNumber *designCapacity = [[NSNumber alloc] initWithLong: battDesCap];
+    NSNumber *designCap = [[NSNumber alloc] initWithLong: battDesCap];
     
     // Full Charge Capacity
     NSInteger battMaxCap = [[batteryDict objectForKey:@"MaxCapacity"] integerValue];
-    NSNumber *maximumCapacity = [[NSNumber alloc] initWithLong: battMaxCap];
+    NSNumber *maximumCap = [[NSNumber alloc] initWithLong: battMaxCap];
         
-    KABattery *batteryData = [[KABattery alloc] initWithTemperature: temp WithCurrentCapacity: currentCap WithDesignCapacity: designCapacity andWithMaximumCapacity: maximumCapacity];
+    KABattery *batteryData = [[KABattery alloc] initWithTemperature: temp WithCurrentCapacity: currentCap WithDesignCapacity: designCap andWithMaximumCapacity: maximumCap];
     
     return batteryData;
 }

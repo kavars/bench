@@ -687,8 +687,10 @@
                 <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
                     <window key="window" title="SSD Benchmark" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-                        <rect key="contentRect" x="632" y="322" width="377" height="270"/>
+                        <rect key="contentRect" x="632" y="322" width="438" height="259"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <value key="minSize" type="size" width="438" height="259"/>
+                        <value key="maxSize" type="size" width="438" height="259"/>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
@@ -701,10 +703,10 @@
             </objects>
             <point key="canvasLocation" x="23.5" y="250"/>
         </scene>
-        <!--Battery View Controller-->
+        <!--Battery-->
         <scene sceneID="I8h-Va-gBs">
             <objects>
-                <viewController id="rl6-mj-hlb" customClass="BatteryViewController" customModule="Benchmark" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Battery" id="rl6-mj-hlb" customClass="BatteryViewController" customModule="Benchmark" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="nWG-as-xGw">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -712,7 +714,7 @@
                 </viewController>
                 <customObject id="oB9-Tb-YUH" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="551" y="783"/>
+            <point key="canvasLocation" x="554" y="749"/>
         </scene>
         <!--SSD-->
         <scene sceneID="hIz-AP-VOD">
@@ -728,7 +730,7 @@
                                 <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="below" numberOfTickMarks="7" sliderType="linear" id="nqd-x3-T9b"/>
                             </slider>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uop-tm-yqe">
-                                <rect key="frame" x="70" y="121" width="84" height="16"/>
+                                <rect key="frame" x="70" y="161" width="84" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Label" id="nqk-pM-euN">
                                     <font key="font" metaFont="system"/>
@@ -777,7 +779,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3RN-2x-OmP">
-                                <rect key="frame" x="70" y="145" width="84" height="16"/>
+                                <rect key="frame" x="70" y="185" width="84" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Label" id="yth-nE-vIg">
                                     <font key="font" metaFont="system"/>
@@ -786,7 +788,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f75-Q0-5XM">
-                                <rect key="frame" x="29" y="121" width="31" height="16"/>
+                                <rect key="frame" x="29" y="161" width="31" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Free" id="BuE-p9-7Uj">
                                     <font key="font" metaFont="system"/>
@@ -795,7 +797,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TlC-Aq-BKl">
-                                <rect key="frame" x="70" y="169" width="84" height="16"/>
+                                <rect key="frame" x="70" y="209" width="84" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Label" id="fbb-9E-wEs">
                                     <font key="font" metaFont="system"/>
@@ -804,7 +806,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sza-g6-Ud2">
-                                <rect key="frame" x="29" y="145" width="36" height="16"/>
+                                <rect key="frame" x="29" y="185" width="36" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Used" id="FJU-CC-USC">
                                     <font key="font" metaFont="system"/>
@@ -813,7 +815,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tis-ZK-fYH">
-                                <rect key="frame" x="29" y="168" width="20" height="16"/>
+                                <rect key="frame" x="29" y="208" width="20" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="All" id="AHu-V1-wqr">
                                     <font key="font" metaFont="system"/>
@@ -821,27 +823,15 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2GD-4S-lgE">
-                                <rect key="frame" x="18" y="203" width="147" height="25"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="AGW-BX-5W5" id="jY8-8Q-zm9">
-                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="menu"/>
-                                    <menu key="menu" id="Zeo-nh-JmG">
-                                        <items>
-                                            <menuItem title="Item 1" state="on" id="AGW-BX-5W5"/>
-                                            <menuItem title="Item 2" id="jRe-IT-bIt"/>
-                                            <menuItem title="Item 3" id="HTU-VU-eJq"/>
-                                        </items>
-                                    </menu>
-                                </popUpButtonCell>
-                            </popUpButton>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vte-8N-6Hc">
                                 <rect key="frame" x="25" y="19" width="80" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Export" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="T9m-CI-k5r">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
+                                    <connections>
+                                        <action selector="exportLog:" target="XfG-lQ-9wD" id="Sh6-97-cO9"/>
+                                    </connections>
                                 </buttonCell>
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6mp-td-2lX">
@@ -867,7 +857,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v69-cl-fsJ">
-                                <rect key="frame" x="20" y="114" width="142" height="77"/>
+                                <rect key="frame" x="20" y="154" width="142" height="77"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" bezelStyle="round" id="zza-p0-omS">
                                     <font key="font" metaFont="system"/>
@@ -888,10 +878,23 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Gv-pG-nSv">
+                                <rect key="frame" x="114" y="19" width="45" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="trash" catalog="system" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EpV-Bk-swa">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="removeAllBlocks:" target="XfG-lQ-9wD" id="N0w-cq-Kwd"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="allSpaceLabel" destination="TlC-Aq-BKl" id="9g6-ur-6wv"/>
+                        <outlet property="clearButton" destination="4Gv-pG-nSv" id="RiD-iH-iAm"/>
+                        <outlet property="exportButton" destination="Vte-8N-6Hc" id="2iS-kQ-hPx"/>
                         <outlet property="freeSpaceLabel" destination="Uop-tm-yqe" id="Xc8-pf-JNk"/>
                         <outlet property="inputValueTextField" destination="BoF-1e-EPo" id="YMO-wR-OdT"/>
                         <outlet property="progressIndicator" destination="GZO-TI-3d3" id="rzk-6A-Egd"/>
@@ -907,15 +910,15 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8" y="1194.5"/>
+            <point key="canvasLocation" x="23" y="1199.5"/>
         </scene>
         <!--Tab View Controller-->
         <scene sceneID="D06-Zq-QxM">
             <objects>
                 <tabViewController selectedTabViewItemIndex="0" tabStyle="toolbar" id="vKP-XT-ce3" sceneMemberID="viewController">
                     <tabViewItems>
-                        <tabViewItem image="NSApplicationIcon" id="UNz-ji-h7R"/>
-                        <tabViewItem id="GVf-nS-V3U"/>
+                        <tabViewItem image="opticaldiscdrive" catalog="system" id="UNz-ji-h7R"/>
+                        <tabViewItem image="battery.100" catalog="system" id="GVf-nS-V3U"/>
                     </tabViewItems>
                     <tabView key="tabView" type="noTabsNoBorder" id="uNZ-OY-27C">
                         <rect key="frame" x="0.0" y="0.0" width="344" height="270"/>
@@ -937,6 +940,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="NSApplicationIcon" width="32" height="32"/>
+        <image name="battery.100" catalog="system" width="22" height="11"/>
+        <image name="opticaldiscdrive" catalog="system" width="18" height="13"/>
+        <image name="trash" catalog="system" width="15" height="17"/>
     </resources>
 </document>

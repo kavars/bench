@@ -20,6 +20,8 @@
 		7E87B5FA24F309B600FF3D20 /* StorageInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E87B5F924F309B600FF3D20 /* StorageInfoService.swift */; };
 		7E9CD60E25763B1F005A766B /* BatteryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9CD60D25763B1F005A766B /* BatteryViewController.swift */; };
 		7ED42A6725753B240091805B /* KABattery.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED42A6625753B240091805B /* KABattery.m */; };
+		7ED8EA172586144300A9C3DD /* BlockWriteOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED8EA162586144300A9C3DD /* BlockWriteOperation.swift */; };
+		7ED8EA1B2586165800A9C3DD /* LoggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED8EA1A2586165800A9C3DD /* LoggerService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		7ED42A6525753B240091805B /* Benchmark-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Benchmark-Bridging-Header.h"; sourceTree = "<group>"; };
 		7ED42A6625753B240091805B /* KABattery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KABattery.m; sourceTree = "<group>"; };
 		7ED42A6A25753B330091805B /* KABattery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KABattery.h; sourceTree = "<group>"; };
+		7ED8EA162586144300A9C3DD /* BlockWriteOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockWriteOperation.swift; sourceTree = "<group>"; };
+		7ED8EA1A2586165800A9C3DD /* LoggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +145,8 @@
 			isa = PBXGroup;
 			children = (
 				7E87B5F924F309B600FF3D20 /* StorageInfoService.swift */,
+				7ED8EA162586144300A9C3DD /* BlockWriteOperation.swift */,
+				7ED8EA1A2586165800A9C3DD /* LoggerService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -291,6 +297,7 @@
 			files = (
 				7E9CD60E25763B1F005A766B /* BatteryViewController.swift in Sources */,
 				7E87B5EF24F2FEC500FF3D20 /* SSDConfigurator.swift in Sources */,
+				7ED8EA172586144300A9C3DD /* BlockWriteOperation.swift in Sources */,
 				7ED42A6725753B240091805B /* KABattery.m in Sources */,
 				7E87B5F324F2FEE400FF3D20 /* SSDProtocols.swift in Sources */,
 				7E87B5F124F2FED700FF3D20 /* SSDRouter.swift in Sources */,
@@ -299,6 +306,7 @@
 				7E87B5FA24F309B600FF3D20 /* StorageInfoService.swift in Sources */,
 				7E87B5CB24F2FBF300FF3D20 /* AppDelegate.swift in Sources */,
 				7E87B5ED24F2FEB600FF3D20 /* SSDPresenter.swift in Sources */,
+				7ED8EA1B2586165800A9C3DD /* LoggerService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,7 +471,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = Kaviro.Benchmark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Benchmark/Modules/Battery/Benchmark-Bridging-Header.h";
@@ -488,7 +496,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = Kaviro.Benchmark;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Benchmark/Modules/Battery/Benchmark-Bridging-Header.h";

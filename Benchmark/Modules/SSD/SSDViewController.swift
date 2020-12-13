@@ -13,8 +13,9 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     // MARK: - Properties
     var presenter: SSDPresenterProtocol!
     let configurator: SSDConfiguratorProtocol = SSDConfigurator()
-    
-    var isStop: Bool = false
+    let opQueue = OperationQueue()
+    let logger: SSDLogService = LoggerService()
+
     var blockCount: Int32 = 0
     
     // MARK: - Life cycle methods
@@ -24,15 +25,10 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         configurator.configure(with: self)
         presenter.configureView()
         
-        writeSpeedLabel.stringValue = ""
-        progressLabel.stringValue = ""
-        progressIndicator.doubleValue = 0.0
-        progressLabel.isHidden = true
-        progressIndicator.isHidden = true
-        writeSpeedLabel.isHidden = true
-        writeSpeedTitle.isHidden = true
-//        ssdInfoBlock.layer?.cornerRadius = 10
-//        ssdInfoBlock.layer?.masksToBounds = true
+        resetUI()
+        
+        exportButton.isEnabled = false
+        clearButton.isEnabled = false
     }
 
     override var representedObject: Any? {
@@ -63,18 +59,68 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     @IBOutlet weak var startButton: NSButton!
     @IBOutlet weak var stopButton: NSButton!
     
-    // MARK: - Actions
+    @IBOutlet weak var exportButton: NSButton!
+    @IBOutlet weak var clearButton: NSButton!
     
+    // MARK: - Actions
     @objc func sliderMoved() {
         presenter.sliderMoved(with: sliderView.intValue)
-//        inputValueTextField.stringValue = ""
-//        inputValueTextField.placeholderString = "\(sliderView.intValue) GB"
+    }
+    
+    @IBAction func removeAllBlocks(_ sender: Any) {
+        DispatchQueue.global(qos: .utility).async {
+            let dirPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("SSDBlocks")
+            
+            do {
+                let blocksURL = try FileManager.default.contentsOfDirectory(at: dirPath, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+                            
+                for blockURL in blocksURL {
+                    try FileManager.default.removeItem(at: blockURL)
+                }
+            } catch {
+                self.createAndShowErrorAlert(with: "\(error.localizedDescription)\nYou can delete all blocks at ~/Library/Containers/Benchmark/data/SSDBlocks/")
+            }
+        }
+        
+        clearButton.isEnabled = false
+    }
+    
+    @IBAction func exportLog(_ sender: Any) {
+        let panel = NSSavePanel()
+        
+        panel.nameFieldStringValue = logger.logFileName
+        
+        let result = panel.runModal()
+        
+        switch result {
+        case .OK:
+            guard let saveURL = panel.url else {
+                return
+            }
+            
+            if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                
+                let fileURL = dir.appendingPathComponent(logger.logFileName)
+                
+                do {
+                    try FileManager.default.moveItem(at: fileURL, to: saveURL)
+                } catch {
+                    createAndShowErrorAlert(with: "\(error.localizedDescription)\nYou can find log at ~/Library/Containers/Benchmark/data/Documents/\(logger.logFileName)")
+                }
+            }
+        default:
+            print("Panel shouldn't be anything other than OK or Cancel")
+        }
+        
+        exportButton.isEnabled = false
     }
     
     @IBAction func startBenchmarkButtonTapped(_ sender: NSButton) {
-        stopButton.isEnabled = true
-        isStop = false
         
+        stopButton.isEnabled = true
+        
+        exportButton.isEnabled = false
+        startButton.isEnabled = false
         writeSpeedLabel.stringValue = "0 mb/s"
         progressIndicator.maxValue = Double(blockCount)
         progressLabel.stringValue = "0/\(blockCount)"
@@ -84,107 +130,72 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         writeSpeedLabel.isHidden = false
         writeSpeedTitle.isHidden = false
 
-        
-        let dateFormatter = DateFormatter()
-        
-        dateFormatter.dateFormat = "HH-mm-ss"
-        logFile = "ssd_test+\(dateFormatter.string(from: Date())).csv"
-
-        let text = "Block;Speed;Time\n"
-        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+        logger.createLogFileForSSD { (error) in
+            let alert = NSAlert()
+            alert.messageText = "Error"
+            alert.informativeText = error
+            alert.alertStyle = .warning
+            alert.addButton(withTitle: "OK")
+            alert.icon = NSImage(named: NSImage.cautionName)
+            alert.runModal()
             
-            let fileURL = dir.appendingPathComponent(logFile)
-            
-            do {
-                try text.write(to: fileURL, atomically: false, encoding: .utf8)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.resetUI()
+                self.endWrite()
+                
+                // cancel operation
             }
-            catch {print(error.localizedDescription)}
+            self.opQueue.cancelAllOperations()
+//            return
         }
         
-        dateFormatter.dateFormat = "y-MM-dd H-m-ss.SSSS"
-        
-        
-        DispatchQueue.global(qos: .userInteractive).async {
-            let gb = 1024 * 1024 * 1024
-            let data = Data(count: gb)
+        let blockWriteOperation = BlockWriteOperation(blockCount: self.blockCount) { (index, result, blockTime) in
             
-            let dirPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("SSDBlocks")
+            self.logger.writeSSDLog(index: Int(index) + 1, speed: result, time: blockTime)
             
-            try? FileManager.default.createDirectory(at: dirPath, withIntermediateDirectories: true, attributes: nil) //
-                        
-            for i in 0..<self.blockCount {
-                let startBlock = Date()
-                if self.isStop {
-                    break
+            self.writeSpeedLabel.stringValue = "\(result) mb/s"
+            self.progressLabel.stringValue = "\(index + 1)/\(self.blockCount)"
+            self.progressIndicator.doubleValue = Double(index + 1)
+        }
+        
+        blockWriteOperation.completionBlock = {
+            if !blockWriteOperation.isCancelled {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.resetUI()
+                    self.endWrite()
                 }
-                do {
-                    try data.write(to: FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("SSDBlocks/" + dateFormatter.string(from: Date()) + ".data"))
-                } catch let error as NSError {
-                    print(error.localizedDescription)
-                }
-                let endBlockTime = Date()
-                let blockTime = endBlockTime.timeIntervalSince(startBlock)
-                
-                DispatchQueue.main.async {
-                    self.progressLabel.stringValue = "\(i + 1)/\(self.blockCount)"
-                    self.progressIndicator.doubleValue = Double(i + 1)
-                    
-                    let result = Int(1024.0 - Double(gb) * blockTime / 1024.0 / 1024.0 + 1024.0)
-                    
-                    self.logSSD(index: Int(i) + 1, speed: result, time: blockTime)
-                    
-                    self.writeSpeedLabel.stringValue = "\(result) mb/s"
+            }
 
-                }
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.progressLabel.isHidden = true
-                self.progressIndicator.isHidden = true
-                self.progressLabel.stringValue = ""
-                self.writeSpeedLabel.isHidden = true
-                self.writeSpeedTitle.isHidden = true
-                self.progressIndicator.doubleValue = 0.0
-            }
             self.presenter.configureView()
         }
-
-        
-        
-    }
-    var logFile = ""
-    func logSSD(index: Int, speed: Int, time: Double) {
-        DispatchQueue.global(qos: .utility).async {
-            let text = "\(index);\(speed);\(time)\n"
-            
-            let stringData = text.data(using: .utf8)!
-
-            if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
                 
-                let fileURL = dir.appendingPathComponent(self.logFile)
-                
-                if FileManager.default.fileExists(atPath: fileURL.path) {
-                    if let fileHandle = try? FileHandle(forWritingTo: fileURL) {
-                        fileHandle.seekToEndOfFile()
-                        fileHandle.write(stringData)
-                        fileHandle.closeFile()
-                    }
-                }
-            }
-        }
+        opQueue.addOperation(blockWriteOperation)
     }
     
     @IBAction func stopBenchmarkButtonTapped(_ sender: NSButton) {
-        isStop = true
+        opQueue.cancelAllOperations()
         
         DispatchQueue.main.async {
-            self.writeSpeedLabel.isHidden = true
-            self.progressLabel.isHidden = true
-            self.progressIndicator.isHidden = true
-            self.writeSpeedTitle.isHidden = true
-            self.writeSpeedLabel.stringValue = ""
-            self.progressLabel.stringValue = ""
-            self.progressIndicator.doubleValue = 0.0
+            self.resetUI()
+            self.endWrite()
         }
+    }
+    
+    func resetUI() {
+        progressLabel.isHidden = true
+        progressIndicator.isHidden = true
+        writeSpeedLabel.isHidden = true
+        writeSpeedTitle.isHidden = true
+
+        progressLabel.stringValue = ""
+        progressIndicator.doubleValue = 0.0
+    }
+    
+    func endWrite() {
+        self.startButton.isEnabled = true
+        self.stopButton.isEnabled = false
+        self.clearButton.isEnabled = true
+        self.exportButton.isEnabled = true
     }
     
     // MARK: - SSDViewProtocol methods
@@ -236,16 +247,14 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         }
     }
     
-    func createAndActivateAlert() {
+    func createAndShowErrorAlert(with description: String) {
         DispatchQueue.main.async {
             let alert = NSAlert()
-            
-            alert.messageText = "Incorrect value"
-            alert.informativeText = "Input block size more than 0 and less than free space"
-            alert.addButton(withTitle: "OK")
+            alert.messageText = "Error"
+            alert.informativeText = description
             alert.alertStyle = .warning
+            alert.addButton(withTitle: "OK")
             alert.icon = NSImage(named: NSImage.cautionName)
-            
             alert.runModal()
         }
     }

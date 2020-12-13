@@ -45,7 +45,7 @@ class SSDPresenter: SSDPresenterProtocol {
     func textFieldUpdated(with newValue: String, maxValue: Double) {
         
         guard let newIntValue = Int32(newValue), newIntValue <= Int32(maxValue), newIntValue > 0 else {
-            view.createAndActivateAlert()
+            view.createAndShowErrorAlert(with: "Input block size must be more than 0 or less than free space")
             return
         }
         
