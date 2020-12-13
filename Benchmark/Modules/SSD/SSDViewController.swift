@@ -13,9 +13,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     // MARK: - Properties
     var presenter: SSDPresenterProtocol!
     let configurator: SSDConfiguratorProtocol = SSDConfigurator()
-    let opQueue = OperationQueue()
-    let logger: SSDLogService = LoggerService()
-    var blockCount: Int32 = 0
+
+    var blockCount: Int32 = 0 // move to interactor
     
     // MARK: - Life cycle methods
     override func viewDidLoad() {
@@ -24,7 +23,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         configurator.configure(with: self)
         presenter.configureView()
         
-        opQueue.qualityOfService = .userInteractive
+        self.exportButton.isEnabled = false
+        self.clearButton.isEnabled = false
     }
     
     // MARK: - Outlets
@@ -74,75 +74,40 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     }
     
     @IBAction func exportLog(_ sender: Any) {
-        let panel = NSSavePanel()
-        
-        panel.nameFieldStringValue = logger.logFileName
-        
-        let result = panel.runModal()
-        
-        switch result {
-        case .OK:
-            guard let saveURL = panel.url else {
-                return
-            }
-            
-            if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                
-                let fileURL = dir.appendingPathComponent(logger.logFileName)
-                
-                do {
-                    try FileManager.default.moveItem(at: fileURL, to: saveURL)
-                } catch {
-                    createAndShowErrorAlert(with: "\(error.localizedDescription)\nYou can find log at ~/Library/Containers/Benchmark/data/Documents/\(logger.logFileName)")
-                }
-            }
-        default:
-            print("Panel shouldn't be anything other than OK or Cancel")
-        }
-        
-        exportButton.isEnabled = false
+//        let panel = NSSavePanel()
+//
+//        panel.nameFieldStringValue = logger.logFileName
+//
+//        let result = panel.runModal()
+//
+//        switch result {
+//        case .OK:
+//            guard let saveURL = panel.url else {
+//                return
+//            }
+//
+//            if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+//
+//                let fileURL = dir.appendingPathComponent(logger.logFileName)
+//
+//                do {
+//                    try FileManager.default.moveItem(at: fileURL, to: saveURL)
+//                } catch {
+//                    createAndShowErrorAlert(with: "\(error.localizedDescription)\nYou can find log at ~/Library/Containers/Benchmark/data/Documents/\(logger.logFileName)")
+//                }
+//            }
+//        default:
+//            print("Panel shouldn't be anything other than OK or Cancel")
+//        }
+//
+//        exportButton.isEnabled = false
     }
     
     @IBAction func startBenchmarkButtonTapped(_ sender: NSButton) {
-        
         presenter.startButtonTapped()
-
-        logger.createLogFileForSSD { (error) in
-            self.createAndShowErrorAlert(with: error)
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.resetUI()
-                self.endWrite()
-            }
-            self.opQueue.cancelAllOperations()
-        }
-        
-        let blockWriteOperation = BlockWriteOperation(blockCount: self.blockCount) { (index, result, blockTime) in
-            
-            self.logger.writeSSDLog(index: Int(index) + 1, speed: result, time: blockTime)
-            
-            self.writeSpeedLabel.stringValue = "\(result) mb/s"
-            self.progressLabel.stringValue = "\(index + 1)/\(self.blockCount)"
-            self.progressIndicator.doubleValue = Double(index + 1)
-        }
-        
-        blockWriteOperation.completionBlock = {
-            if !blockWriteOperation.isCancelled {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.resetUI()
-                    self.endWrite()
-                }
-            }
-
-            self.presenter.configureView()
-        }
-
-        opQueue.addOperation(blockWriteOperation)
     }
     
     @IBAction func stopBenchmarkButtonTapped(_ sender: NSButton) {
-        opQueue.cancelAllOperations()
-        
         presenter.stopButtonTapped()
     }
     
@@ -173,8 +138,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     func setupButtons() {
         DispatchQueue.main.async {
             self.stopButton.isEnabled = false
-            self.exportButton.isEnabled = false
-            self.clearButton.isEnabled = false
+            
         }
     }
     
@@ -245,6 +209,19 @@ class SSDViewController: NSViewController, SSDViewProtocol {
             self.progressIndicator.isHidden = false
             self.writeSpeedLabel.isHidden = false
             self.writeSpeedTitle.isHidden = false
+        }
+    }
+    
+    func updateWriteSpeed(_ speed: String) {
+        DispatchQueue.main.async {
+            self.writeSpeedLabel.stringValue = speed
+        }
+    }
+    
+    func updateProgress(_ label: String, _ indicator: Double) {
+        DispatchQueue.main.async {
+            self.progressLabel.stringValue = label
+            self.progressIndicator.doubleValue = indicator
         }
     }
 }

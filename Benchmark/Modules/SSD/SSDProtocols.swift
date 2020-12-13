@@ -24,6 +24,9 @@ protocol SSDViewProtocol: class {
     func endWrite()
     
     func changeUIForStart(blockCount: Int32)
+    
+    func updateWriteSpeed(_ speed: String)
+    func updateProgress(_ label: String, _ indicator: Double)
 }
 
 // MARK: - Interactor protocol
@@ -32,6 +35,10 @@ protocol SSDInteractorProtocol: class {
     var totalSpaceInByte: Int64 { get }
     var usedSpaceInByte: Int64 { get }
     var freeSpaceInByte: Int64 { get }
+    
+    func createLogFileForSSD(failure: @escaping (String) -> Void)
+    func stopOperation()
+    func startWrite(with blockCount: Int32)
 }
 
 // MARK: - Presenter protocol
@@ -45,6 +52,10 @@ protocol SSDPresenterProtocol: class {
     
     func startButtonTapped()
     func stopButtonTapped()
+    
+    func stopWrite()
+    
+    func updateWhileWrite(at index: Int, with result: Int, _ blockCount: Int32)
 }
 
 // MARK: - Configurator protocol

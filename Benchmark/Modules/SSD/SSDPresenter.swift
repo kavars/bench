@@ -66,15 +66,34 @@ class SSDPresenter: SSDPresenterProtocol {
     func startButtonTapped() {
         view.changeUIForStart(blockCount: view.blockCount) // change
         
-        // start log interactor
-        // start write interactor
+        interactor.createLogFileForSSD { (error) in
+            self.view.createAndShowErrorAlert(with: error)
+            
+            // delay 0.5 ?
+            self.view.resetUI()
+            self.view.endWrite()
+            
+            self.interactor.stopOperation()
+        }
+
+        interactor.startWrite(with: view.blockCount)
     }
     
     func stopButtonTapped() {
-        // stop opQueue
+        interactor.stopOperation()
         
         view.resetUI()
         view.endWrite()
+    }
+    
+    func stopWrite() {
+        view.resetUI()
+        view.endWrite()
+    }
+    
+    func updateWhileWrite(at index: Int, with result: Int, _ blockCount: Int32) {
+        view.updateWriteSpeed("\(result) mb/s")
+        view.updateProgress("\(index + 1)/\(blockCount)", Double(index + 1))
     }
     
     // MARK: - Private methods
