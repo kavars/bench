@@ -12,7 +12,8 @@ import Foundation
 protocol SSDViewProtocol: class {
     var blockCount: Int32 { set get }
     
-    func setupSlider(freeSpaceInBytes: Double, sliderStartValue: Int, sliderValueText: String)
+    func setupSlider(freeSpaceInBytes: Double)
+    func updateSlider(freeSpaceInBytes: Double)
     func setupDiskSpaceLabels(all: String, used: String, free: String)
     func setupButtons()
     func setupInputTextField()
@@ -56,6 +57,8 @@ protocol SSDPresenterProtocol: class {
     func stopWrite()
     
     func updateWhileWrite(at index: Int, with result: Int, _ blockCount: Int32)
+    
+    func updateUI()
 }
 
 // MARK: - Configurator protocol

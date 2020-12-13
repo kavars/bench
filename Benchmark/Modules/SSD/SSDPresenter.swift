@@ -22,23 +22,18 @@ class SSDPresenter: SSDPresenterProtocol {
     
     // MARK: - Configure view
     func configureView() {
-        
-        let freeSpace = Double(interactor.freeSpaceInByte / 1000000000)
+        view.setupButtons()
+        let freeSpace = Double(interactor.freeSpaceInByte / 1000000000) - 10.0
 
-        if freeSpace > 70 {
-            view.setupSlider(freeSpaceInBytes: freeSpace, sliderStartValue: 70, sliderValueText: "70 GB")
-        } else {
-            view.setupSlider(freeSpaceInBytes: freeSpace, sliderStartValue: Int(freeSpace) / 2, sliderValueText: "\(Int(freeSpace) / 2) GB")
-        }
+        view.setupSlider(freeSpaceInBytes: freeSpace)
+        view.resetUI()
+        view.setupInputTextField()
         
         view.setupDiskSpaceLabels(
             all: spaceFormatter(bytes: interactor.totalSpaceInByte),
             used: spaceFormatter(bytes: interactor.usedSpaceInByte),
             free: spaceFormatter(bytes: interactor.freeSpaceInByte)
         )
-        view.setupButtons()
-        view.setupInputTextField()
-        view.resetUI()
     }
     
     // MARK: - SSDPresenterProtocol methods
@@ -94,6 +89,17 @@ class SSDPresenter: SSDPresenterProtocol {
     func updateWhileWrite(at index: Int, with result: Int, _ blockCount: Int32) {
         view.updateWriteSpeed("\(result) mb/s")
         view.updateProgress("\(index + 1)/\(blockCount)", Double(index + 1))
+    }
+    
+    func updateUI() {
+        let freeSpace = Double(interactor.freeSpaceInByte / 1000000000) - 10.0
+        view.updateSlider(freeSpaceInBytes: freeSpace)
+        
+        view.setupDiskSpaceLabels(
+            all: spaceFormatter(bytes: interactor.totalSpaceInByte),
+            used: spaceFormatter(bytes: interactor.usedSpaceInByte),
+            free: spaceFormatter(bytes: interactor.freeSpaceInByte)
+        )
     }
     
     // MARK: - Private methods

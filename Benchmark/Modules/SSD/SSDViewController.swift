@@ -22,9 +22,6 @@ class SSDViewController: NSViewController, SSDViewProtocol {
 
         configurator.configure(with: self)
         presenter.configureView()
-        
-        self.exportButton.isEnabled = false
-        self.clearButton.isEnabled = false
     }
     
     // MARK: - Outlets
@@ -67,7 +64,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
                 self.createAndShowErrorAlert(with: "\(error.localizedDescription)\n\nYou can delete all blocks at ~/Library/Containers/Benchmark/data/SSDBlocks/")
             }
             
-            self.presenter.configureView()
+            self.presenter.updateUI()
         }
         
         clearButton.isEnabled = false
@@ -112,7 +109,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     }
     
     // MARK: - SSDViewProtocol methods
-    func setupSlider(freeSpaceInBytes: Double, sliderStartValue: Int, sliderValueText: String) {
+    func setupSlider(freeSpaceInBytes: Double) { // , sliderStartValue: Int, sliderValueText: String) {
         DispatchQueue.main.async {
             self.sliderView.target = self
             self.sliderView.action = #selector(self.sliderMoved)
@@ -127,6 +124,12 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         }
     }
     
+    func updateSlider(freeSpaceInBytes: Double) {
+        self.sliderView.maxValue = freeSpaceInBytes
+        
+        self.sliderView.integerValue = 1
+    }
+    
     func setupDiskSpaceLabels(all: String, used: String, free: String) {
         DispatchQueue.main.async {
             self.allSpaceLabel.stringValue = all
@@ -138,7 +141,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     func setupButtons() {
         DispatchQueue.main.async {
             self.stopButton.isEnabled = false
-            
+            self.exportButton.isEnabled = false
+            self.clearButton.isEnabled = false
         }
     }
     

@@ -65,7 +65,7 @@ class SSDInteractor: SSDInteractorProtocol {
                     self.presenter.stopWrite()
                 }
             }
-            self.presenter.configureView()
+            self.presenter.updateUI()
 
         }
         
