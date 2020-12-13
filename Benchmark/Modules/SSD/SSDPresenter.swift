@@ -38,6 +38,7 @@ class SSDPresenter: SSDPresenterProtocol {
         )
         view.setupButtons()
         view.setupInputTextField()
+        view.resetUI()
     }
     
     // MARK: - SSDPresenterProtocol methods
@@ -49,10 +50,10 @@ class SSDPresenter: SSDPresenterProtocol {
             return
         }
         
-        let newLabelValue = "\(newIntValue) GB"
+//        let newLabelValue = "\(newIntValue) GB"
         let newSliderValue = newIntValue
         
-        view.updateSliderTextValue(with: newLabelValue)
+//        view.updateSliderTextValue(with: newLabelValue)
         view.updateSliderValue(with: newSliderValue)
         view.blockCount = newIntValue
     }
@@ -62,9 +63,23 @@ class SSDPresenter: SSDPresenterProtocol {
         view.blockCount = newValue
     }
     
+    func startButtonTapped() {
+        view.changeUIForStart(blockCount: view.blockCount) // change
+        
+        // start log interactor
+        // start write interactor
+    }
+    
+    func stopButtonTapped() {
+        // stop opQueue
+        
+        view.resetUI()
+        view.endWrite()
+    }
+    
     // MARK: - Private methods
     
-    func spaceFormatter(bytes: Int64) -> String {
+    private func spaceFormatter(bytes: Int64) -> String {
         return ByteCountFormatter.string(fromByteCount: bytes, countStyle: ByteCountFormatter.CountStyle.file)
     }
 }

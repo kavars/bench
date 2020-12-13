@@ -20,6 +20,10 @@ protocol SSDViewProtocol: class {
     func updateSliderTextValue(with textValue: String)
     func updateSliderValue(with intValue: Int32)
     func createAndShowErrorAlert(with description: String)
+    func resetUI()
+    func endWrite()
+    
+    func changeUIForStart(blockCount: Int32)
 }
 
 // MARK: - Interactor protocol
@@ -38,6 +42,9 @@ protocol SSDPresenterProtocol: class {
     
     func textFieldUpdated(with newValue: String, maxValue: Double)
     func sliderMoved(with newValue: Int32)
+    
+    func startButtonTapped()
+    func stopButtonTapped()
 }
 
 // MARK: - Configurator protocol
