@@ -20,6 +20,14 @@ class SSDViewController: NSViewController, SSDViewProtocol {
 
         configurator.configure(with: self)
         presenter.configureView()
+        
+        // TODO: Refactor
+        if #available(macOS 11.0, *) {
+            
+        } else {
+            clearButton.title = "Bin"
+        }
+        removeAllBlocks(clearButton as Any)
     }
     
     // MARK: - Outlets
