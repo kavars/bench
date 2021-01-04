@@ -48,6 +48,14 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         presenter.sliderMoved(with: sliderView.intValue)
     }
     
+    // TODO refactor
+    @IBAction func openLogFolder(_ sender: NSButton) {
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            NSWorkspace.shared.open(dir)
+        }
+    }
+    
+    // TODO refactor
     @IBAction func removeAllBlocks(_ sender: Any) {
         DispatchQueue.global(qos: .utility).async {
             let dirPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("SSDBlocks")
@@ -87,7 +95,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
             print("Panel shouldn't be anything other than OK")
         }
 
-        exportButton.isEnabled = false // to presenter
+        exportButton.isEnabled = false // TODO to presenter 
     }
     
     @IBAction func startBenchmarkButtonTapped(_ sender: NSButton) {

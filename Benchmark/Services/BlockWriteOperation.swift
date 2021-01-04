@@ -45,7 +45,7 @@ class BlockWriteOperation: Operation {
             let endBlockTime = Date()
             let blockTime = endBlockTime.timeIntervalSince(startBlock)
             
-            let result = Int(1000.0 - Double(gb) * blockTime / 1000.0 / 1000.0 + 1000.0)
+            let result = Int(1000.0 / blockTime)
             
             DispatchQueue.main.async {
                 self.uiUpdater(Int(i), result, blockTime)
