@@ -708,11 +708,11 @@
             <objects>
                 <viewController title="Battery" id="rl6-mj-hlb" customClass="BatteryViewController" customModule="Benchmark" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="nWG-as-xGw">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="438" height="259"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cjd-fQ-xhQ">
-                                <rect key="frame" x="111" y="87" width="75" height="32"/>
+                                <rect key="frame" x="269" y="13" width="75" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Start" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DSU-ks-35h">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -723,7 +723,7 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xXI-mT-vdW">
-                                <rect key="frame" x="256" y="87" width="75" height="32"/>
+                                <rect key="frame" x="350" y="13" width="75" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Stop" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Lb4-Yf-6TD">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -733,16 +733,42 @@
                                     <action selector="stopCollectionBatteryStats:" target="rl6-mj-hlb" id="iPh-hX-6NC"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qip-9e-eUs">
+                                <rect key="frame" x="13" y="13" width="48" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="folder" catalog="system" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="n5H-O1-UE1">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="openLogFolder:" target="rl6-mj-hlb" id="jva-wb-UpD"/>
+                                </connections>
+                            </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="igG-4p-o6c">
+                                <rect key="frame" x="14" y="109" width="410" height="41"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Test Time" id="d5G-1O-j5g">
+                                    <font key="font" metaFont="system" size="35"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="igG-4p-o6c" firstAttribute="leading" secondItem="nWG-as-xGw" secondAttribute="leading" constant="16" id="CmS-It-Y8v"/>
+                            <constraint firstItem="igG-4p-o6c" firstAttribute="centerX" secondItem="nWG-as-xGw" secondAttribute="centerX" id="PTT-Rs-bZo"/>
+                            <constraint firstAttribute="trailing" secondItem="igG-4p-o6c" secondAttribute="trailing" constant="16" id="dhA-MI-eVH"/>
+                            <constraint firstItem="igG-4p-o6c" firstAttribute="centerY" secondItem="nWG-as-xGw" secondAttribute="centerY" id="xfF-sq-dsm"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="startButton" destination="Cjd-fQ-xhQ" id="PNu-TD-81q"/>
                         <outlet property="stopButton" destination="xXI-mT-vdW" id="fWf-2L-4fp"/>
+                        <outlet property="timeLabel" destination="igG-4p-o6c" id="4LS-sD-3CR"/>
                     </connections>
                 </viewController>
                 <customObject id="oB9-Tb-YUH" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="554" y="749"/>
+            <point key="canvasLocation" x="554" y="748.5"/>
         </scene>
         <!--SSD-->
         <scene sceneID="hIz-AP-VOD">
@@ -917,6 +943,17 @@
                                     <action selector="removeAllBlocks:" target="XfG-lQ-9wD" id="N0w-cq-Kwd"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="btV-b2-AXB">
+                                <rect key="frame" x="114" y="51" width="45" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="folder" catalog="system" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="OC8-Hp-OWK">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="openLogFolder:" target="XfG-lQ-9wD" id="J7a-Q3-jZd"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>
@@ -969,6 +1006,7 @@
     <resources>
         <image name="battery" width="19" height="9"/>
         <image name="disc" width="15" height="11"/>
+        <image name="folder" catalog="system" width="18" height="14"/>
         <image name="trash" width="13" height="15"/>
     </resources>
 </document>

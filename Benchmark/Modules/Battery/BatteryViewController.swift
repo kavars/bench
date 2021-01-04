@@ -16,6 +16,7 @@ class BatteryViewController: NSViewController {
         
     @IBOutlet weak var startButton: NSButton!
     @IBOutlet weak var stopButton: NSButton!
+    @IBOutlet weak var timeLabel: NSTextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +50,13 @@ class BatteryViewController: NSViewController {
         }
 
     }
-
+    
+    @IBAction func openLogFolder(_ sender: NSButton) {
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            NSWorkspace.shared.open(dir)
+        }
+    }
+    
     @IBAction func startCollectionBatteryStats(_ sender: NSButton) {
         startCollectionBatteryStats()
     }
