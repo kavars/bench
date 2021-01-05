@@ -15,6 +15,10 @@ class SSDPresenter: SSDPresenterProtocol {
     var interactor: SSDInteractorProtocol!
     var router: SSDRouterProtocol!
     
+    var currentLogName: String {
+        return interactor.currentLogName
+    }
+    
     // MARK: - Initializers
     init(view: SSDViewProtocol) {
         self.view = view

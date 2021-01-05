@@ -14,6 +14,8 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     var presenter: SSDPresenterProtocol!
     let configurator: SSDConfiguratorProtocol = SSDConfigurator()
     
+    var popoverGraph: NSPopover?
+    
     // MARK: - Life cycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,11 +24,6 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         presenter.configureView()
         
         // TODO: Refactor
-        if #available(macOS 11.0, *) {
-            
-        } else {
-            clearButton.title = "Bin"
-        }
         removeAllBlocks(clearButton as Any)
     }
     
@@ -54,6 +51,24 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     // MARK: - Actions
     @objc func sliderMoved() {
         presenter.sliderMoved(with: sliderView.intValue)
+    }
+    
+    
+    @IBAction func interactionWithGraph(_ sender: NSButton) {
+        if let popover = popoverGraph {
+            popover.close()
+            popoverGraph = nil
+        } else {
+            popoverGraph = NSPopover()
+            
+            let ssdGraphVC = SSDGraphViewController()
+            ssdGraphVC.view.frame = CGRect(origin: .zero, size: CGSize(width: 150.0, height: 150.0))
+            
+            popoverGraph?.contentViewController = ssdGraphVC
+            popoverGraph?.show(relativeTo: view.bounds, of: view, preferredEdge: NSRectEdge.minX)
+            
+            ssdGraphVC.buildGraph(with: presenter.currentLogName)
+        }
     }
     
     // TODO refactor
@@ -87,7 +102,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     @IBAction func exportLog(_ sender: Any) {
         let panel = NSSavePanel()
 
-        panel.nameFieldStringValue = "ssdLog.csv"
+        panel.nameFieldStringValue = presenter.currentLogName
 
         let result = panel.runModal()
 

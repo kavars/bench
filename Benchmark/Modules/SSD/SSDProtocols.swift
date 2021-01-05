@@ -33,6 +33,7 @@ protocol SSDViewProtocol: class {
 // MARK: - Interactor protocol
 protocol SSDInteractorProtocol: class {
     var blockCount: Int32 { set get }
+    var currentLogName: String { get }
     
     var totalSpaceInByte: Int64 { get }
     var usedSpaceInByte: Int64 { get }
@@ -48,6 +49,7 @@ protocol SSDInteractorProtocol: class {
 // MARK: - Presenter protocol
 protocol SSDPresenterProtocol: class {
     var router: SSDRouterProtocol! { set get }
+    var currentLogName: String { get }
     
     func configureView()
     

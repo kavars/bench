@@ -22,6 +22,7 @@
 		7ED42A6725753B240091805B /* KABattery.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED42A6625753B240091805B /* KABattery.m */; };
 		7ED8EA172586144300A9C3DD /* BlockWriteOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED8EA162586144300A9C3DD /* BlockWriteOperation.swift */; };
 		7ED8EA1B2586165800A9C3DD /* LoggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED8EA1A2586165800A9C3DD /* LoggerService.swift */; };
+		7EEB240C25A3BBB400D59532 /* SSDGraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EEB240B25A3BBB400D59532 /* SSDGraphViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		7ED42A6A25753B330091805B /* KABattery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KABattery.h; sourceTree = "<group>"; };
 		7ED8EA162586144300A9C3DD /* BlockWriteOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockWriteOperation.swift; sourceTree = "<group>"; };
 		7ED8EA1A2586165800A9C3DD /* LoggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerService.swift; sourceTree = "<group>"; };
+		7EEB240B25A3BBB400D59532 /* SSDGraphViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSDGraphViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +133,7 @@
 		7E87B5E924F2FE6500FF3D20 /* SSD */ = {
 			isa = PBXGroup;
 			children = (
+				7EEB240A25A3BB9E00D59532 /* SSD Graph */,
 				7E87B5CC24F2FBF300FF3D20 /* SSDViewController.swift */,
 				7E87B5EA24F2FEAC00FF3D20 /* SSDInteractor.swift */,
 				7E87B5EC24F2FEB600FF3D20 /* SSDPresenter.swift */,
@@ -191,6 +194,14 @@
 				7E9CD60D25763B1F005A766B /* BatteryViewController.swift */,
 			);
 			path = Battery;
+			sourceTree = "<group>";
+		};
+		7EEB240A25A3BB9E00D59532 /* SSD Graph */ = {
+			isa = PBXGroup;
+			children = (
+				7EEB240B25A3BBB400D59532 /* SSDGraphViewController.swift */,
+			);
+			path = "SSD Graph";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -302,6 +313,7 @@
 				7E87B5F324F2FEE400FF3D20 /* SSDProtocols.swift in Sources */,
 				7E87B5F124F2FED700FF3D20 /* SSDRouter.swift in Sources */,
 				7E87B5CD24F2FBF300FF3D20 /* SSDViewController.swift in Sources */,
+				7EEB240C25A3BBB400D59532 /* SSDGraphViewController.swift in Sources */,
 				7E87B5EB24F2FEAC00FF3D20 /* SSDInteractor.swift in Sources */,
 				7E87B5FA24F309B600FF3D20 /* StorageInfoService.swift in Sources */,
 				7E87B5CB24F2FBF300FF3D20 /* AppDelegate.swift in Sources */,
