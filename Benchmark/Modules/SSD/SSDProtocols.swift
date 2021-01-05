@@ -21,6 +21,7 @@ protocol SSDViewProtocol: class {
     func updateSliderTextValue(with textValue: String)
     func updateSliderValue(with intValue: Int32)
     func createAndShowErrorAlert(with description: String)
+    func checkBlocksFolder()
     func resetUI()
     func endWrite()
     

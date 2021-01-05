@@ -957,7 +957,7 @@
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zct-xG-FQd">
                                 <rect key="frame" x="13" y="59" width="75" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" transparent="YES" imageScaling="proportionallyDown" inset="2" id="26c-Iz-vRW">
+                                <buttonCell key="cell" type="push" title="Graph" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="26c-Iz-vRW">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
@@ -972,6 +972,7 @@
                         <outlet property="clearButton" destination="4Gv-pG-nSv" id="RiD-iH-iAm"/>
                         <outlet property="exportButton" destination="Vte-8N-6Hc" id="2iS-kQ-hPx"/>
                         <outlet property="freeSpaceLabel" destination="Uop-tm-yqe" id="Xc8-pf-JNk"/>
+                        <outlet property="graphButton" destination="Zct-xG-FQd" id="YRQ-Cw-TEi"/>
                         <outlet property="inputValueTextField" destination="BoF-1e-EPo" id="YMO-wR-OdT"/>
                         <outlet property="progressIndicator" destination="GZO-TI-3d3" id="rzk-6A-Egd"/>
                         <outlet property="progressLabel" destination="0Fp-OC-L89" id="vt4-s5-noT"/>

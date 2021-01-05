@@ -24,7 +24,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
         presenter.configureView()
         
         // TODO: Refactor
-        removeAllBlocks(clearButton as Any)
+        graphButton.isHidden = true
     }
     
     // MARK: - Outlets
@@ -47,6 +47,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     @IBOutlet weak var stopButton: NSButton!
     @IBOutlet weak var exportButton: NSButton!
     @IBOutlet weak var clearButton: NSButton!
+    @IBOutlet weak var graphButton: NSButton!
     
     // MARK: - Actions
     @objc func sliderMoved() {
@@ -75,6 +76,18 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     @IBAction func openLogFolder(_ sender: NSButton) {
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             NSWorkspace.shared.open(dir)
+        }
+    }
+    
+    func isBlocksFolderEmpty() -> Bool {
+        let dirPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("SSDBlocks")
+        
+        do {
+            let blocksURL = try FileManager.default.contentsOfDirectory(at: dirPath, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            
+            return blocksURL.isEmpty
+        } catch {
+            return false
         }
     }
     
@@ -196,6 +209,12 @@ class SSDViewController: NSViewController, SSDViewProtocol {
             alert.addButton(withTitle: "OK")
             alert.icon = NSImage(named: NSImage.cautionName)
             alert.runModal()
+        }
+    }
+    
+    func checkBlocksFolder() {
+        DispatchQueue.main.async {
+            self.clearButton.isEnabled = !self.isBlocksFolderEmpty()
         }
     }
     

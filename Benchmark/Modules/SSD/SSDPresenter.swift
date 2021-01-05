@@ -38,6 +38,8 @@ class SSDPresenter: SSDPresenterProtocol {
             used: spaceFormatter(bytes: interactor.usedSpaceInByte),
             free: spaceFormatter(bytes: interactor.freeSpaceInByte)
         )
+        
+        view.checkBlocksFolder()
     }
     
     // MARK: - SSDPresenterProtocol methods
