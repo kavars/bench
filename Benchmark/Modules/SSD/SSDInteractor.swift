@@ -17,6 +17,10 @@ class SSDInteractor: SSDInteractorProtocol {
 
     lazy var logger: SSDLogService = LoggerService()
     
+    var currentLogName: String {
+        return logger.logFileName
+    }
+    
     var totalSpaceInByte: Int64 {
         get {
             return DiskStatus.totalDiskSpaceInBytes

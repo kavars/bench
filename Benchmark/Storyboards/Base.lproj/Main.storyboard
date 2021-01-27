@@ -736,7 +736,7 @@
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qip-9e-eUs">
                                 <rect key="frame" x="13" y="19" width="48" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="folder" catalog="system" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="n5H-O1-UE1">
+                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="folder_icon" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="n5H-O1-UE1">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
@@ -935,7 +935,7 @@
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Gv-pG-nSv">
                                 <rect key="frame" x="124" y="19" width="45" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="trash" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EpV-Bk-swa">
+                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="trash_icon" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EpV-Bk-swa">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
@@ -946,12 +946,23 @@
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="btV-b2-AXB">
                                 <rect key="frame" x="86" y="19" width="45" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="folder" catalog="system" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="OC8-Hp-OWK">
+                                <buttonCell key="cell" type="push" bezelStyle="rounded" image="folder_icon" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="OC8-Hp-OWK">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="openLogFolder:" target="XfG-lQ-9wD" id="J7a-Q3-jZd"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zct-xG-FQd">
+                                <rect key="frame" x="13" y="59" width="75" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Graph" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="26c-Iz-vRW">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="interactionWithGraph:" target="XfG-lQ-9wD" id="ovg-kk-G9T"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -961,6 +972,7 @@
                         <outlet property="clearButton" destination="4Gv-pG-nSv" id="RiD-iH-iAm"/>
                         <outlet property="exportButton" destination="Vte-8N-6Hc" id="2iS-kQ-hPx"/>
                         <outlet property="freeSpaceLabel" destination="Uop-tm-yqe" id="Xc8-pf-JNk"/>
+                        <outlet property="graphButton" destination="Zct-xG-FQd" id="YRQ-Cw-TEi"/>
                         <outlet property="inputValueTextField" destination="BoF-1e-EPo" id="YMO-wR-OdT"/>
                         <outlet property="progressIndicator" destination="GZO-TI-3d3" id="rzk-6A-Egd"/>
                         <outlet property="progressLabel" destination="0Fp-OC-L89" id="vt4-s5-noT"/>
@@ -981,8 +993,8 @@
             <objects>
                 <tabViewController selectedTabViewItemIndex="0" tabStyle="toolbar" id="vKP-XT-ce3" sceneMemberID="viewController">
                     <tabViewItems>
-                        <tabViewItem image="disc" id="UNz-ji-h7R"/>
-                        <tabViewItem image="battery" id="GVf-nS-V3U"/>
+                        <tabViewItem image="drive_icon" id="UNz-ji-h7R"/>
+                        <tabViewItem image="battery_icon" id="GVf-nS-V3U"/>
                     </tabViewItems>
                     <tabView key="tabView" type="noTabsNoBorder" id="uNZ-OY-27C">
                         <rect key="frame" x="0.0" y="0.0" width="344" height="270"/>
@@ -1004,9 +1016,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="battery" width="19" height="9"/>
-        <image name="disc" width="15" height="11"/>
-        <image name="folder" catalog="system" width="18" height="14"/>
-        <image name="trash" width="13" height="15"/>
+        <image name="battery_icon" width="146" height="69"/>
+        <image name="drive_icon" width="116" height="84"/>
+        <image name="folder_icon" width="16" height="13"/>
+        <image name="trash_icon" width="13" height="13"/>
     </resources>
 </document>

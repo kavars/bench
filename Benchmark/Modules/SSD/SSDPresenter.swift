@@ -15,6 +15,10 @@ class SSDPresenter: SSDPresenterProtocol {
     var interactor: SSDInteractorProtocol!
     var router: SSDRouterProtocol!
     
+    var currentLogName: String {
+        return interactor.currentLogName
+    }
+    
     // MARK: - Initializers
     init(view: SSDViewProtocol) {
         self.view = view
@@ -23,7 +27,7 @@ class SSDPresenter: SSDPresenterProtocol {
     // MARK: - Configure view
     func configureView() {
         view.setupButtons()
-        let freeSpace = Double(interactor.freeSpaceInByte / 1000000000) - 10.0
+        let freeSpace = Double(interactor.freeSpaceInByte / 1000000000) - 1.0
 
         view.setupSlider(freeSpaceInBytes: freeSpace)
         view.resetUI()
@@ -34,6 +38,8 @@ class SSDPresenter: SSDPresenterProtocol {
             used: spaceFormatter(bytes: interactor.usedSpaceInByte),
             free: spaceFormatter(bytes: interactor.freeSpaceInByte)
         )
+        
+        view.checkBlocksFolder()
     }
     
     // MARK: - SSDPresenterProtocol methods
@@ -41,7 +47,7 @@ class SSDPresenter: SSDPresenterProtocol {
     func textFieldUpdated(with newValue: String, maxValue: Double) {
         
         guard let newIntValue = Int32(newValue), newIntValue <= Int32(maxValue), newIntValue > 0 else {
-            view.createAndShowErrorAlert(with: "Input block size must be more than 0 or less than free space")
+            view.createAndShowErrorAlert(with: "Input block size must be more than 0 or less than free space - 1 GB")
             return
         }
         
@@ -92,7 +98,7 @@ class SSDPresenter: SSDPresenterProtocol {
     }
     
     func updateUI() {
-        let freeSpace = Double(interactor.freeSpaceInByte / 1000 * 1000 * 1000) - 10.0
+        let freeSpace = Double(interactor.freeSpaceInByte / (1000 * 1000 * 1000)) - 1.0
         view.updateSlider(freeSpaceInBytes: freeSpace)
         
         view.setupDiskSpaceLabels(

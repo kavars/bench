@@ -14,12 +14,17 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     var presenter: SSDPresenterProtocol!
     let configurator: SSDConfiguratorProtocol = SSDConfigurator()
     
+    var popoverGraph: NSPopover?
+    
     // MARK: - Life cycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
         configurator.configure(with: self)
         presenter.configureView()
+        
+        // TODO: Refactor
+        graphButton.isHidden = true
     }
     
     // MARK: - Outlets
@@ -42,16 +47,47 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     @IBOutlet weak var stopButton: NSButton!
     @IBOutlet weak var exportButton: NSButton!
     @IBOutlet weak var clearButton: NSButton!
+    @IBOutlet weak var graphButton: NSButton!
     
     // MARK: - Actions
     @objc func sliderMoved() {
         presenter.sliderMoved(with: sliderView.intValue)
     }
     
+    
+    @IBAction func interactionWithGraph(_ sender: NSButton) {
+        if let popover = popoverGraph {
+            popover.close()
+            popoverGraph = nil
+        } else {
+            popoverGraph = NSPopover()
+            
+            let ssdGraphVC = SSDGraphViewController()
+            ssdGraphVC.view.frame = CGRect(origin: .zero, size: CGSize(width: 150.0, height: 150.0))
+            
+            popoverGraph?.contentViewController = ssdGraphVC
+            popoverGraph?.show(relativeTo: view.bounds, of: view, preferredEdge: NSRectEdge.minX)
+            
+            ssdGraphVC.buildGraph(with: presenter.currentLogName)
+        }
+    }
+    
     // TODO refactor
     @IBAction func openLogFolder(_ sender: NSButton) {
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             NSWorkspace.shared.open(dir)
+        }
+    }
+    
+    func isBlocksFolderEmpty() -> Bool {
+        let dirPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("SSDBlocks")
+        
+        do {
+            let blocksURL = try FileManager.default.contentsOfDirectory(at: dirPath, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            
+            return blocksURL.isEmpty
+        } catch {
+            return false
         }
     }
     
@@ -79,7 +115,7 @@ class SSDViewController: NSViewController, SSDViewProtocol {
     @IBAction func exportLog(_ sender: Any) {
         let panel = NSSavePanel()
 
-        panel.nameFieldStringValue = "ssdLog.csv"
+        panel.nameFieldStringValue = presenter.currentLogName
 
         let result = panel.runModal()
 
@@ -173,6 +209,12 @@ class SSDViewController: NSViewController, SSDViewProtocol {
             alert.addButton(withTitle: "OK")
             alert.icon = NSImage(named: NSImage.cautionName)
             alert.runModal()
+        }
+    }
+    
+    func checkBlocksFolder() {
+        DispatchQueue.main.async {
+            self.clearButton.isEnabled = !self.isBlocksFolderEmpty()
         }
     }
     
